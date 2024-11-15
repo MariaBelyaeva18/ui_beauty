@@ -3,4 +3,5 @@ export default () => ({
 		username: null,
 		password: null,
 	},
-})
+	message: null,
+});

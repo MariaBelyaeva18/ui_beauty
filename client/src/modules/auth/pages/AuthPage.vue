@@ -1,29 +1,35 @@
 <template>
   <v-text-field
-      label="Username"
-      density="comfortable"
-      :model-value="store.form.username"
-      @input="store.form.username = $event.target.value"
+    label="Username"
+    density="comfortable"
+    :model-value="store.form.username"
+    @input="store.form.username = $event.target.value"
   ></v-text-field>
 
   <v-text-field
-      label="Password"
-      density="comfortable"
-      :model-value="store.form.password"
-      @input="store.form.password = $event.target.value"
+    label="Password"
+    density="comfortable"
+    :model-value="store.form.password"
+    @input="store.form.password = $event.target.value"
   ></v-text-field>
   <v-btn
-      type="submit"
-      class="mt-2"
-      @click.stop="loginButton(store.form)"
+    type="submit"
+    class="mt-2"
+    @click.stop="loginButton(store.form)"
   >Submit</v-btn>
   <v-btn
-      type="submit"
-      style="margin-left: 10px"
-      class="mt-2"
-      @click.stop="this.reset()"
+    type="submit"
+    style="margin-left: 10px"
+    class="mt-2"
+    @click.stop="this.reset()"
   >Reset</v-btn>
-  {{ store }}
+  <v-alert
+    v-if="store.message"
+    :text="store.message"
+    title="ERROR"
+    type="error"
+    variant="tonal"
+  ></v-alert>
 </template>
 
 <script setup>
@@ -46,12 +52,8 @@ export default {
 			};
 		},
 		async loginButton(payload) {
-			try {
-				await this.store.checkUser(payload);
-				await this.$router.push('/users');
-			} catch(e) {
-				console.log(e);
-			}
+			await this.store.checkUser(payload);
+			// await this.$router.push('/users');
 		},
 	}
 };

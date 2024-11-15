@@ -1,4 +1,4 @@
 export default () => ({
 	loading: false,
-	active: false
+	active: false,
 });
