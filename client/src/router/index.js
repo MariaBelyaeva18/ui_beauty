@@ -1,52 +1,19 @@
-import {createRouter, createWebHistory, isNavigationFailure} from 'vue-router';
-import {store} from '../store/index';
+import {createRouter, createWebHistory} from 'vue-router';
 
-import staticRoutes from './staticRoutes';
+import AuthPage from '@/modules/auth/pages/AuthPage.vue';
+import UsersPage from '@/modules/users/pages/UsersPage.vue';
+import RegisterPage from '@/modules/register/pages/RegisterPage.vue';
+
+const routes = [
+	{ path: '/', redirect: {path: '/auth'} },
+	{ path: '/auth', component: AuthPage },
+	{ path: '/register', component: RegisterPage },
+	{ path: '/users', component: UsersPage },
+];
 
 const router = createRouter({
-	history: createWebHistory(import.meta.env.BASE_URL),
-	routes: [
-		...staticRoutes(),
-		{
-			path: '/',
-			redirect: () => ({ path: '/auth' }),
-		},
-	],
+	history: createWebHistory(),
+	routes,
 });
 
-/** Ловлю ошибки дубликатов */
-const originalPush = router.push;
-router.push = function push(location, onResolve, onReject) {
-	if (onResolve || onReject) {
-		return originalPush.call(this, location, onResolve, onReject);
-	}
-
-	return originalPush.call(this, location).catch((err) => {
-		if (isNavigationFailure(err)) {
-			return err;
-		}
-
-		return Promise.reject(err);
-	});
-};
-
-router.beforeEach((to, from, next) => {
-	const loadLocal = JSON.parse(localStorage.getItem('loading'));
-
-	if (loadLocal && from.name) {
-		return;
-	}
-
-	// проверяем, активен ли пользователь
-	const isActive = store.active;
-	console.log(isActive);
-
-	// если пользователь активен, отправляем на host
-	if (isActive && to.name === 'login') {
-		next({ name: 'users' });
-		return;
-	}
-
-	next();
-});
 export default router;
