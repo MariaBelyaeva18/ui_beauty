@@ -1,72 +1,76 @@
 <template>
   <div class="auth">
-    <div class="auth_title">Авторизация</div>
+    <div class="auth_title">
+      Авторизация
+    </div>
     <div class="auth_notify">
       <v-alert
-          class="auth_input"
-          v-if="auth.message"
-          :text="auth.message"
-          density="compact"
-          :icon="false"
-          type="error"
-          variant="tonal"
-      ></v-alert>
+        v-if="auth.message"
+        class="auth_input"
+        :text="auth.message"
+        density="compact"
+        :icon="false"
+        type="error"
+        variant="tonal"
+      />
     </div>
     <div class="mb-4">
       <v-text-field
-          class="auth_input"
-          label="Username"
-          density="comfortable"
-          hide-details
-          :model-value="auth.form.username"
-          @input="auth.form.username = $event.target.value"
-      ></v-text-field>
+        class="auth_input"
+        label="Логин"
+        density="comfortable"
+        hide-details
+        :model-value="auth.form.username"
+        @input="auth.form.username = $event.target.value"
+      />
       <v-text-field
-          class="auth_input"
-          label="Password"
-          density="comfortable"
-          hide-details
-          :model-value="auth.form.password"
-          @input="auth.form.password = $event.target.value"
-      ></v-text-field>
+        class="auth_input"
+        label="Пароль"
+        density="comfortable"
+        hide-details
+        :model-value="auth.form.password"
+        @input="auth.form.password = $event.target.value"
+      />
     </div>
     <div>
       <v-btn
-          type="submit"
-          class="mt-2"
-          @click.stop="loginButton(auth.form)"
-      >Войти</v-btn>
+        type="submit"
+        class="mt-2"
+        @click.stop="loginButton(auth.form)"
+      >
+        Войти
+      </v-btn>
       <v-btn
-          type="submit"
-          style="margin-left: 10px"
-          class="mt-2"
-          @click.stop="this.$router.push('/register')"
-      >Регистрация</v-btn>
+        type="submit"
+        style="margin-left: 10px"
+        class="mt-2"
+        @click.stop="$router.push('/register')"
+      >
+        Регистрация
+      </v-btn>
     </div>
   </div>
 </template>
 
 <script>
-import {authStore} from '@/store/auth';
-import {store} from '@/store';
+import { authStore } from '@/store/auth';
+import { store } from '@/store';
 
 export default {
-	name: 'AuthPage',
-	data () {
-		return {
-			auth: authStore(),
-			main: store(),
-		};
-	},
-	methods: {
-		async loginButton(payload) {
-			this.auth.message = null;
-			await this.auth.checkUser(payload);
-			if (this.main.active) {
-				await this.$router.push('/users');
-			}
-		},
-	}
+  name: 'AuthPage',
+  data() {
+    return {
+      auth: authStore(),
+      main: store(),
+    };
+  },
+  methods: {
+    async loginButton(payload) {
+      this.auth.message = null;
+      await this.auth.checkUser(payload);
+      window.location.reload();
+    },
+  },
 };
 </script>
 

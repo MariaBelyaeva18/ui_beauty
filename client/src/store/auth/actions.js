@@ -1,18 +1,26 @@
 import axios from 'axios';
-import {store} from '../index';
-import {authStore} from '../auth/index';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default {
-	async checkUser(payload) {
-		try {
-			await axios.post(`${apiUrl}/auth`, {...payload});
-			authStore().message = null;
-			store().active = true;
-		} catch (e) {
-			authStore().message = e.response.data.message;
-			console.error(e);
-		}
-	}
+  async checkUser(payload) {
+    try {
+      const { data: { data } } = await axios.post(`${apiUrl}/auth`, { ...payload });
+      this.message = null;
+      localStorage.setItem('user', JSON.stringify(data));
+    } catch (e) {
+      this.message = e.response.data.message;
+      console.error(e);
+    }
+  },
+
+  async logout() {
+    try {
+      localStorage.setItem('user', null);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      window.location.reload();
+    }
+  },
 };

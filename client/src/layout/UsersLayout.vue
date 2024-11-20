@@ -2,12 +2,25 @@
   <section>
     <header class="text-h4">
       <b>Beauty help</b>
+      <button @click="auth.logout()">
+        logout
+      </button>
     </header>
 
     <slot />
-
   </section>
 </template>
+
+<script>
+import { authStore } from '@/store/auth';
+
+export default {
+  name: 'UsersLayout',
+  data: () => ({
+    auth: authStore(),
+  }),
+};
+</script>
 
 <style>
 header {
