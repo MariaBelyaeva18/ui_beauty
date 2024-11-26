@@ -1,6 +1,6 @@
 import './assets/main.css';
 
-import { createApp } from 'vue';
+import { createApp, markRaw } from 'vue';
 import { createPinia } from 'pinia';
 
 import App from './App.vue';
@@ -12,11 +12,13 @@ import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css';
-import { store } from '@/store';
+import { useMainStore } from '@/store/mainStore';
 
 const app = createApp(App);
 
-app.use(createPinia());
+const pinia = createPinia();
+
+app.use(pinia);
 
 const vuetify = createVuetify({
   components,
@@ -26,6 +28,12 @@ const vuetify = createVuetify({
 app.use(vuetify);
 app.use(router);
 
-store().getList();
+/** Нужно, чтобы в сторах pinia можно было использовать this.router */
+pinia.use(({ store }) => {
+  store.router = markRaw(router);
+});
+
+const mainStore = useMainStore();
+mainStore.getList();
 
 app.mount('#app');

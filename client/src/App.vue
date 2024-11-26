@@ -1,7 +1,7 @@
 <template>
-    <UsersLayout>
-      <router-view/>
-    </UsersLayout>
+  <UsersLayout>
+    <router-view />
+  </UsersLayout>
 </template>
 
 <script setup>

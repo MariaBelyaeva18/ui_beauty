@@ -5,9 +5,9 @@
     </div>
     <div class="auth_notify">
       <v-alert
-        v-if="auth.message"
+        v-if="authStore.message"
         class="auth_input"
-        :text="auth.message"
+        :text="authStore.message"
         density="compact"
         :icon="false"
         type="error"
@@ -20,23 +20,23 @@
         label="Логин"
         density="comfortable"
         hide-details
-        :model-value="auth.form.username"
-        @input="auth.form.username = $event.target.value"
+        :model-value="authStore.form.username"
+        @input="authStore.form.username = $event.target.value"
       />
       <v-text-field
         class="auth_input"
         label="Пароль"
         density="comfortable"
         hide-details
-        :model-value="auth.form.password"
-        @input="auth.form.password = $event.target.value"
+        :model-value="authStore.form.password"
+        @input="authStore.form.password = $event.target.value"
       />
     </div>
     <div>
       <v-btn
         type="submit"
         class="mt-2"
-        @click.stop="loginButton(auth.form)"
+        @click.stop="loginButton(authStore.form)"
       >
         Войти
       </v-btn>
@@ -44,7 +44,7 @@
         type="submit"
         style="margin-left: 10px"
         class="mt-2"
-        @click.stop="$router.push('/register')"
+        @click="$router.push('/register')"
       >
         Регистрация
       </v-btn>
@@ -52,26 +52,16 @@
   </div>
 </template>
 
-<script>
-import { authStore } from '@/store/auth';
-import { store } from '@/store';
+<script setup>
+import { useAuthStore } from '@/store/authStore';
 
-export default {
-  name: 'AuthPage',
-  data() {
-    return {
-      auth: authStore(),
-      main: store(),
-    };
-  },
-  methods: {
-    async loginButton(payload) {
-      this.auth.message = null;
-      await this.auth.checkUser(payload);
-      window.location.reload();
-    },
-  },
+const authStore = useAuthStore();
+
+const loginButton = async (payload) => {
+  authStore.message = null;
+  await authStore.checkUser(payload);
 };
+
 </script>
 
 <style lang="sass" scoped>

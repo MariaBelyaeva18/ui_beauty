@@ -17,20 +17,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (from.name) {
-    return;
-  }
-
   // проверяем, активен ли пользователь
-  const isActive = localStorage.getItem('user') !== 'null';
+  const isActive = !!localStorage.getItem('user');
 
   // если пользователь активен, отправляем на host
-  if (!isActive && to.name !== 'auth') {
+  if (!isActive && !['auth', 'register'].includes(to.name)) {
     next({ name: 'auth' });
     return;
   }
 
-  console.log(isActive);
   // если пользователь активен, отправляем на host
   if (isActive && to.name === 'auth') {
     next({ name: 'users' });

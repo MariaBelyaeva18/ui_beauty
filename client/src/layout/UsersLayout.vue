@@ -2,7 +2,7 @@
   <section>
     <header class="text-h4">
       <b>Beauty help</b>
-      <button @click="auth.logout()">
+      <button @click="authStore.logout()">
         logout
       </button>
     </header>
@@ -11,15 +11,10 @@
   </section>
 </template>
 
-<script>
-import { authStore } from '@/store/auth';
+<script setup>
+import { useAuthStore } from '@/store/authStore';
 
-export default {
-  name: 'UsersLayout',
-  data: () => ({
-    auth: authStore(),
-  }),
-};
+const authStore = useAuthStore();
 </script>
 
 <style>

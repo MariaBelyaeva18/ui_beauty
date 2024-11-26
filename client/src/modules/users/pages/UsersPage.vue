@@ -6,17 +6,10 @@
   </section>
 </template>
 
-<script>
+<script setup>
 
-import { store } from '@/store';
+import { ref } from 'vue';
 
-export default {
-  name: 'UsersPage',
-  data() {
-    return {
-      main: store(),
-      user: JSON.parse(localStorage.getItem('user')),
-    };
-  },
-};
+const user = ref(JSON.parse(localStorage.getItem('user')));
+
 </script>
