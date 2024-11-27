@@ -1,6 +1,6 @@
 <template>
   <section>
-    <header class="text-h4">
+    <header class="text-h4 d-flex justify-space-between">
       <b>Beauty help</b>
       <button @click="authStore.logout()">
         logout
@@ -24,6 +24,6 @@ header {
   font-size: 26pt;
   display: flex;
   align-items: center;
-  padding-left: 40px;
+  padding: 0 40px;
 }
 </style>
