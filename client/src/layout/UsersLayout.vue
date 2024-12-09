@@ -1,14 +1,48 @@
 <template>
-  <section>
-    <header class="text-h4 d-flex justify-space-between">
-      <b>Beauty help</b>
-      <button @click="authStore.logout()">
-        logout
-      </button>
-    </header>
+  <v-responsive
+    class="border rounded"
+  >
+    <v-app>
+      <v-app-bar
+        title="Beauty help"
+        @click="$router.push('/')"
+      />
 
-    <slot />
-  </section>
+      <v-navigation-drawer
+        class="bg-deep-purple"
+        theme="dark"
+        permanent
+      >
+        <v-list
+          nav
+        >
+          <v-list-item
+            prepend-icon="mdi-package-variant"
+            title="Склад"
+            value="storage"
+            @click="$router.push('/storage')"
+          />
+        </v-list>
+
+        <template #append>
+          <div class="pa-2">
+            <v-btn
+              block
+              @click="authStore.logout()"
+            >
+              Logout
+            </v-btn>
+          </div>
+        </template>
+      </v-navigation-drawer>
+
+      <v-main>
+        <v-container>
+          <slot />
+        </v-container>
+      </v-main>
+    </v-app>
+  </v-responsive>
 </template>
 
 <script setup>
@@ -16,14 +50,3 @@ import { useAuthStore } from '@/store/authStore';
 
 const authStore = useAuthStore();
 </script>
-
-<style>
-header {
-  background-color: #C2B9FCA9;
-  height: 70px;
-  font-size: 26pt;
-  display: flex;
-  align-items: center;
-  padding: 0 40px;
-}
-</style>
