@@ -14,7 +14,7 @@
     </div>
 
     <v-data-table-server
-      :items-per-page="storageStore.tableSettingsInfo.itemsPerPage"
+      :items-per-page="storageStore.tableSettingsInfo.limit"
       :headers="headers"
       :items="storageStore.materials"
       :items-per-page-options="[
@@ -26,9 +26,8 @@
       :items-length="storageStore.tableSettingsInfo.totalItems"
       :loading="storageStore.tableSettingsInfo.loading"
       item-value="id"
-      @update:page="storageStore.tableSettingsInfo.offset =
-        storageStore.tableSettingsInfo.limit * $event"
-      @update:items-per-page="storageStore.tableSettingsInfo.limit = $event; console.log($event)"
+      @update:page="changePageHandler"
+      @update:items-per-page="changePageItemsHandler"
     />
 
     <AddMaterialModal />
@@ -46,4 +45,18 @@ const storageStore = useStorageStore();
 onMounted(() => {
   storageStore.getList();
 });
+
+const changePageHandler = (page) => {
+  console.log(page);
+  storageStore.tableSettingsInfo.offset = storageStore.tableSettingsInfo.limit * (page - 1);
+
+  storageStore.getList();
+};
+const changePageItemsHandler = (limit) => {
+  console.log(limit);
+  storageStore.tableSettingsInfo.limit = limit;
+
+  storageStore.getList();
+};
+
 </script>
