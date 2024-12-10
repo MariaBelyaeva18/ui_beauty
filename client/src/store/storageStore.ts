@@ -11,6 +11,16 @@ export const useStorageStore = defineStore('storage', {
       createMaterial: false,
     },
 
+    tableSettingsInfo: {
+      limit: 10,
+      offset: 0,
+      totalItems: 0,
+      loading: false,
+    },
+
+    /** Массив материалов со склада */
+    materials: [],
+
     addMaterialModalView: false,
   }),
 
@@ -24,10 +34,31 @@ export const useStorageStore = defineStore('storage', {
           materialName: '',
           amount: 0,
         };
+        await this.getList();
       } catch (e) {
         console.error(e);
       } finally {
         this.loadingFlags.createMaterial = false;
+      }
+    },
+
+    /** Получение списка материалов */
+    async getList() {
+      try {
+        this.tableSettingsInfo.loading = true;
+        const { data: { data } } = await api.get('/storage/list', {
+          params: {
+            limit: this.tableSettingsInfo.limit,
+            offset: this.tableSettingsInfo.offset,
+          },
+        });
+
+        this.materials = data.materials;
+        this.tableSettingsInfo.totalItems = data.totalCount;
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.tableSettingsInfo.loading = false;
       }
     },
   },
