@@ -39,11 +39,46 @@
         </v-icon>
         <v-icon
           size="small"
+          @click="storageStore.deleteModalView = true; storageStore.form.id = item.id"
         >
           mdi-delete
         </v-icon>
       </template>
     </v-data-table-server>
+
+    <v-dialog
+      :model-value="storageStore.deleteModalView"
+      max-width="500px"
+      @update:model-value="storageStore.deleteModalView = $event"
+    >
+      <v-card>
+        <v-card-text>
+          Удаление материала
+        </v-card-text>
+        <v-card-text class="text-h5">
+          Материал будет удален со склада без возможности восстановления.
+          Вы уверены, что хотите продолжить?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="storageStore.deleteModalView = false"
+          >
+            Отмена
+          </v-btn>
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="storageStore.deleteMaterial(); storageStore.deleteModalView = false"
+          >
+            Удалить
+          </v-btn>
+          <v-spacer />
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <UpsertMaterialModal />
   </section>

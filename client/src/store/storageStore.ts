@@ -24,6 +24,7 @@ export const useStorageStore = defineStore('storage', {
     materials: [],
 
     addMaterialModalView: false,
+    deleteModalView: false,
   }),
 
   actions: {
@@ -79,6 +80,17 @@ export const useStorageStore = defineStore('storage', {
         console.error(e);
       } finally {
         this.loadingFlags.upsertMaterial = false;
+      }
+    },
+
+    /** Удаление материала */
+    async deleteMaterial() {
+      try {
+        await api.delete(`/storage/${this.form.id}`);
+
+        await this.getList();
+      } catch (e) {
+        console.error(e);
       }
     },
 
