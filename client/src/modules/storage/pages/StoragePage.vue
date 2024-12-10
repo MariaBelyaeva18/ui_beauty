@@ -7,7 +7,7 @@
       <v-btn
         color="blue-darken-4"
         variant="flat"
-        @click="storageStore.addMaterialModalView = true"
+        @click="storageStore.addMaterialModalView = true; storageStore.mode = 'create'"
       >
         Добавить новый материал
       </v-btn>
@@ -28,16 +28,31 @@
       item-value="id"
       @update:page="changePageHandler"
       @update:items-per-page="changePageItemsHandler"
-    />
+    >
+      <template #item.actions="{ item }">
+        <v-icon
+          class="me-2"
+          size="small"
+          @click="editHandler(item)"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          size="small"
+        >
+          mdi-delete
+        </v-icon>
+      </template>
+    </v-data-table-server>
 
-    <AddMaterialModal />
+    <UpsertMaterialModal />
   </section>
 </template>
 
 <script setup>
 import { onMounted } from 'vue';
 import { useStorageStore } from '@/store/storageStore';
-import AddMaterialModal from '@/modules/storage/components/AddMaterialModal.vue';
+import UpsertMaterialModal from '@/modules/storage/components/UpsertMaterialModal.vue';
 import { headers } from '@/modules/storage/enteties/headers';
 
 const storageStore = useStorageStore();
@@ -47,16 +62,25 @@ onMounted(() => {
 });
 
 const changePageHandler = (page) => {
-  console.log(page);
   storageStore.tableSettingsInfo.offset = storageStore.tableSettingsInfo.limit * (page - 1);
 
   storageStore.getList();
 };
 const changePageItemsHandler = (limit) => {
-  console.log(limit);
   storageStore.tableSettingsInfo.limit = limit;
 
   storageStore.getList();
+};
+
+const editHandler = (item) => {
+  storageStore.addMaterialModalView = true;
+  storageStore.mode = 'edit';
+
+  storageStore.form = {
+    id: item.id,
+    materialName: item.name,
+    amount: item.amount,
+  };
 };
 
 </script>

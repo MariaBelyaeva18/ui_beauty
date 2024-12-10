@@ -3,12 +3,14 @@ import { api } from '../utils/Api.js';
 
 export const useStorageStore = defineStore('storage', {
   state: () => ({
+    mode: 'create' as 'create' | 'edit',
     form: {
+      id: null,
       materialName: '',
       amount: 0,
     },
     loadingFlags: {
-      createMaterial: false,
+      upsertMaterial: false,
     },
 
     tableSettingsInfo: {
@@ -25,23 +27,6 @@ export const useStorageStore = defineStore('storage', {
   }),
 
   actions: {
-    /** Создание нового материала на складе */
-    async createMaterial() {
-      try {
-        this.loadingFlags.createMaterial = true;
-        await api.post('/storage', this.form);
-        this.form = {
-          materialName: '',
-          amount: 0,
-        };
-        await this.getList();
-      } catch (e) {
-        console.error(e);
-      } finally {
-        this.loadingFlags.createMaterial = false;
-      }
-    },
-
     /** Получение списка материалов */
     async getList() {
       try {
@@ -61,5 +46,49 @@ export const useStorageStore = defineStore('storage', {
         this.tableSettingsInfo.loading = false;
       }
     },
+
+    /** Создание нового материала на складе */
+    async createMaterial() {
+      try {
+        this.loadingFlags.upsertMaterial = true;
+        await api.post('/storage', {
+          materialName: this.form.materialName,
+          amount: this.form.amount
+        });
+        this.clearForm();
+        await this.getList();
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.loadingFlags.upsertMaterial = false;
+      }
+    },
+
+    /** Обновление материала */
+    async updateMaterial() {
+      try {
+        this.loadingFlags.upsertMaterial = true;
+        await api.patch('/storage', {
+          id: this.form.id,
+          materialName: this.form.materialName,
+          amount: this.form.amount
+        });
+        this.clearForm();
+        await this.getList();
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.loadingFlags.upsertMaterial = false;
+      }
+    },
+
+    clearForm() {
+      this.form = {
+        id: null,
+        materialName: '',
+        amount: 0,
+      };
+    }
+
   },
 });

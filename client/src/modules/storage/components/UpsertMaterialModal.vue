@@ -4,13 +4,13 @@
     class="pa-4"
     location="right"
     width="500"
-    title="Добавление нового материала"
+    :title="getTitle"
     :model-value="storageStore.addMaterialModalView"
-    @update:model-value="storageStore.addMaterialModalView = $event"
+    @update:model-value="storageStore.addMaterialModalView = $event; storageStore.clearForm();"
   >
     <template #default>
       <h1>
-        Добавление нового материала
+        {{ getTitle }}
       </h1>
       <v-text-field
         class="mt-4"
@@ -38,7 +38,7 @@
       <v-btn
         color="blue-darken-4"
         variant="flat"
-        :loading="storageStore.loadingFlags.createMaterial"
+        :loading="storageStore.loadingFlags.upsertMaterial"
         @click="saveMaterialHandler"
       >
         Сохранить
@@ -48,12 +48,22 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useStorageStore } from '@/store/storageStore';
 
 const storageStore = useStorageStore();
 
+const getTitle = computed(() => (storageStore.mode === 'create'
+  ? 'Добавление нового материала'
+  : 'Обновление материала'
+));
+
 const saveMaterialHandler = async () => {
-  await storageStore.createMaterial();
+  if (storageStore.mode === 'create') {
+    await storageStore.createMaterial();
+  } else {
+    await storageStore.updateMaterial();
+  }
   storageStore.addMaterialModalView = false;
 };
 </script>
