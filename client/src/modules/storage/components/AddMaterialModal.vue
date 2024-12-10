@@ -38,7 +38,8 @@
       <v-btn
         color="blue-darken-4"
         variant="flat"
-        @click="storageStore.addMaterialModalView=false"
+        :loading="storageStore.loadingFlags.createMaterial"
+        @click="saveMaterialHandler"
       >
         Сохранить
       </v-btn>
@@ -50,8 +51,9 @@
 import { useStorageStore } from '@/store/storageStore';
 
 const storageStore = useStorageStore();
+
+const saveMaterialHandler = async () => {
+  await storageStore.createMaterial();
+  storageStore.addMaterialModalView = false;
+};
 </script>
-
-<style scoped lang="sass">
-
-</style>
