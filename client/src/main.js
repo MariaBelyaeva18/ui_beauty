@@ -3,16 +3,16 @@ import './assets/main.css';
 import { createApp, markRaw } from 'vue';
 import { createPinia } from 'pinia';
 
-import App from './App.vue';
-import router from './router';
-
 // Vuetify
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css';
+import { VDateInput } from 'vuetify/labs/components';
 import { useMainStore } from '@/store/mainStore';
+import router from './router';
+import App from './App.vue';
 
 const app = createApp(App);
 
@@ -21,7 +21,10 @@ const pinia = createPinia();
 app.use(pinia);
 
 const vuetify = createVuetify({
-  components,
+  components: {
+    ...components,
+    VDateInput,
+  },
   directives,
 });
 

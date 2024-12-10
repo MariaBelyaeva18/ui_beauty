@@ -6,7 +6,7 @@
     width="500"
     :title="getTitle"
     :model-value="storageStore.addMaterialModalView"
-    @update:model-value="storageStore.addMaterialModalView = $event; storageStore.clearForm();"
+    @update:model-value="closeHandler"
   >
     <template #default>
       <h1>
@@ -25,13 +25,21 @@
         :model-value="storageStore.form.amount"
         @input="storageStore.form.amount = $event.target.value"
       />
+      <v-date-input
+        label="Годен до"
+        prepend-icon=""
+        variant="outlined"
+        persistent-placeholder
+        :model-value="storageStore.form.expirationDate"
+        @update:modelValue="storageStore.form.expirationDate = $event"
+      />
     </template>
     <template #append>
       <v-btn
         class="mr-2"
         color="blue-darken-4"
         variant="outlined"
-        @click="storageStore.addMaterialModalView=false"
+        @click="closeHandler "
       >
         Отменить
       </v-btn>
@@ -65,5 +73,10 @@ const saveMaterialHandler = async () => {
     await storageStore.updateMaterial();
   }
   storageStore.addMaterialModalView = false;
+};
+
+const closeHandler = () => {
+  storageStore.addMaterialModalView = false;
+  storageStore.clearForm();
 };
 </script>

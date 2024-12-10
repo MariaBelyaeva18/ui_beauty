@@ -7,6 +7,7 @@ export const useStorageStore = defineStore('storage', {
     form: {
       id: null,
       materialName: '',
+      expirationDate: null,
       amount: 0,
     },
     loadingFlags: {
@@ -54,7 +55,8 @@ export const useStorageStore = defineStore('storage', {
         this.loadingFlags.upsertMaterial = true;
         await api.post('/storage', {
           materialName: this.form.materialName,
-          amount: this.form.amount
+          amount: this.form.amount,
+          expirationDate: this.form.expirationDate
         });
         this.clearForm();
         await this.getList();
@@ -72,7 +74,8 @@ export const useStorageStore = defineStore('storage', {
         await api.patch('/storage', {
           id: this.form.id,
           materialName: this.form.materialName,
-          amount: this.form.amount
+          amount: this.form.amount,
+          expirationDate: this.form.expirationDate
         });
         this.clearForm();
         await this.getList();
@@ -99,6 +102,7 @@ export const useStorageStore = defineStore('storage', {
         id: null,
         materialName: '',
         amount: 0,
+        expirationDate: null
       };
     }
 
