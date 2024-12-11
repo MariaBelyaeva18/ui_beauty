@@ -29,6 +29,15 @@
       @update:page="changePageHandler"
       @update:items-per-page="changePageItemsHandler"
     >
+      <template #item.services="{ item }">
+        <v-chip
+          v-for="service in item.masterServices"
+          :key="service.id"
+          class="mt-2 d-block"
+        >
+          {{ service.name }}
+        </v-chip>
+      </template>
       <template #item.actions="{ item }">
         <v-icon
           class="me-2"
@@ -85,7 +94,7 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import { headers } from '@/modules/employee/enteties/headers';
+import { headers } from '@/modules/employee/entities/headers';
 import { useEmployeeStore } from '@/store/employeeStore';
 import UpsertEmployeeModal from '@/modules/employee/components/UpsertEmployeeModal.vue';
 
@@ -93,6 +102,7 @@ const employeeStore = useEmployeeStore();
 
 onMounted(() => {
   employeeStore.getList();
+  employeeStore.getServicesList();
 });
 
 const changePageHandler = (page) => {
@@ -117,6 +127,7 @@ const editHandler = (item) => {
     lastName: item.lastName,
     phone: item.phone,
     roleId: item.roleId,
+    masterServiceIds: item.masterServices.map((service) => service.id),
   };
 };
 

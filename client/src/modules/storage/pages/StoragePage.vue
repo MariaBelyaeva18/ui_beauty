@@ -88,7 +88,7 @@
 import { onMounted } from 'vue';
 import { useStorageStore } from '@/store/storageStore';
 import UpsertMaterialModal from '@/modules/storage/components/UpsertMaterialModal.vue';
-import { headers } from '@/modules/storage/enteties/headers';
+import { headers } from '@/modules/storage/entities/headers';
 
 const storageStore = useStorageStore();
 

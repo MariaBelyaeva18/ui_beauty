@@ -11,6 +11,7 @@ export const useEmployeeStore = defineStore('employee', {
       lastName: '',
       phone: '',
       roleId: null,
+      masterServiceIds: []
     },
     loadingFlags: {
       upsert: false,
@@ -25,6 +26,7 @@ export const useEmployeeStore = defineStore('employee', {
 
     /** Массив материалов со склада */
     data: [],
+    services: [],
 
     addEmployeeModalView: false,
     deleteModalView: false,
@@ -51,6 +53,22 @@ export const useEmployeeStore = defineStore('employee', {
       }
     },
 
+    /** Получение списка услуг */
+    async getServicesList() {
+      try {
+        const { data: { data } } = await api.get('/services/list', {
+          params: {
+            limit: 100,
+            offset: 0,
+          },
+        });
+
+        this.services = data.data
+      } catch(e) {
+        console.error(e)
+      }
+    },
+
     /** Создание услуги */
     async create() {
       try {
@@ -61,6 +79,7 @@ export const useEmployeeStore = defineStore('employee', {
           lastName: this.form.lastName,
           phone: this.form.phone,
           roleId: this.form.roleId,
+          masterServiceIds: this.form.masterServiceIds
         });
         this.clearForm();
         await this.getList();
@@ -75,13 +94,14 @@ export const useEmployeeStore = defineStore('employee', {
     async update() {
       try {
         this.loadingFlags.upsert = true;
-        await api.patch('/employee', {
+        await api.put('/employee', {
           id: this.form.id,
           name: this.form.name,
           middleName: this.form.middleName,
           lastName: this.form.lastName,
           phone: this.form.phone,
           roleId: this.form.roleId,
+          masterServiceIds: this.form.masterServiceIds
         });
         this.clearForm();
         await this.getList();

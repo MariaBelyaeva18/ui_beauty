@@ -86,7 +86,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import UpsertServiceModal from '@/modules/services/components/UpsertServiceModal.vue';
-import { headers } from '@/modules/services/enteties/headers';
+import { headers } from '@/modules/services/entities/headers';
 import { useServicesStore } from '@/store/servicesStore';
 
 const servicesStore = useServicesStore();

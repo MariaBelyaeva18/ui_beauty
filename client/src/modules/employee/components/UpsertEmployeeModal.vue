@@ -42,6 +42,7 @@
       />
 
       <v-select
+        class="mt-4"
         label="Роль"
         :items="mainStore.roles"
         item-title="role"
@@ -49,6 +50,18 @@
         density="comfortable"
         :model-value="employeeStore.form.roleId"
         @update:modelValue="employeeStore.form.roleId = $event"
+      />
+
+      <v-combobox
+        class="mt-4"
+        multiple
+        label="Услуги"
+        :model-value="employeeStore.form.masterServiceIds"
+        item-title="name"
+        item-value="id"
+        :return-object="false"
+        :items="employeeStore.services"
+        @update:modelValue="employeeStore.form.masterServiceIds = $event"
       />
     </template>
     <template #append>
