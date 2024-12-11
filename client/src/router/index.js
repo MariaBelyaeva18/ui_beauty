@@ -5,6 +5,7 @@ import UsersPage from '@/modules/users/pages/UsersPage.vue';
 import StoragePage from '@/modules/storage/pages/StoragePage.vue';
 import ServicesPage from '@/modules/services/pages/ServicesPage.vue';
 import RegisterPage from '@/modules/register/pages/RegisterPage.vue';
+import EmployeePage from '@/modules/employee/pages/EmployeePage.vue';
 
 const routes = [
   { path: '/', redirect: { path: '/auth' } },
@@ -13,6 +14,7 @@ const routes = [
   { path: '/storage', name: 'storage', component: StoragePage },
   { path: '/register', name: 'register', component: RegisterPage },
   { path: '/services', name: 'services', component: ServicesPage },
+  { path: '/employee', name: 'employee', component: EmployeePage },
 ];
 
 const router = createRouter({

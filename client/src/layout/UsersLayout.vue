@@ -62,6 +62,12 @@
             value="services"
             @click="$router.push('/services')"
           />
+          <v-list-item
+            prepend-icon="mdi-account"
+            title="Сотрудники"
+            value="employee"
+            @click="$router.push('/employee')"
+          />
         </v-list>
 
         <template #append>

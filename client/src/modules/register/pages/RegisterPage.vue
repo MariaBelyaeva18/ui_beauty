@@ -92,7 +92,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useMainStore } from '@/store/mainStore';
 import { useRegisterStore } from '@/store/registerStore';
 
@@ -100,10 +100,6 @@ const mainStore = useMainStore();
 const registerStore = useRegisterStore();
 
 const rules = ref([(value) => !!value || 'Это обязательное поле.']);
-
-onMounted(() => {
-  mainStore.getList();
-});
 
 const reset = () => {
   registerStore.form = {

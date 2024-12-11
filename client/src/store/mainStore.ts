@@ -62,7 +62,7 @@ export const useMainStore = defineStore('main', {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await api.post(`users/avatar/${user.id}`, formData, {
+      await api.post(`users/avatar/${user.id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
