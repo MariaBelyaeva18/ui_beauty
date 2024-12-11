@@ -38,7 +38,7 @@
         :model-value="servicesStore.form.duration"
         :active="menu2"
         :focus="menu2"
-        label="Picker in menu"
+        label="Длительность"
         prepend-icon="mdi-clock-time-four-outline"
         readonly
         @update:modelValue="servicesStore.form.duration = $event"
