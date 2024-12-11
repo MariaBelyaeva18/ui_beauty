@@ -56,6 +56,12 @@
             value="storage"
             @click="$router.push('/storage')"
           />
+          <v-list-item
+            prepend-icon="mdi-room-service"
+            title="Услуги"
+            value="services"
+            @click="$router.push('/services')"
+          />
         </v-list>
 
         <template #append>

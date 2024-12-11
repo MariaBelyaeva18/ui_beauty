@@ -2,15 +2,17 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import AuthPage from '@/modules/auth/pages/AuthPage.vue';
 import UsersPage from '@/modules/users/pages/UsersPage.vue';
-import RegisterPage from '@/modules/register/pages/RegisterPage.vue';
 import StoragePage from '@/modules/storage/pages/StoragePage.vue';
+import ServicesPage from '@/modules/services/pages/ServicesPage.vue';
+import RegisterPage from '@/modules/register/pages/RegisterPage.vue';
 
 const routes = [
   { path: '/', redirect: { path: '/auth' } },
   { path: '/auth', name: 'auth', component: AuthPage },
-  { path: '/register', name: 'register', component: RegisterPage },
   { path: '/users', name: 'users', component: UsersPage },
   { path: '/storage', name: 'storage', component: StoragePage },
+  { path: '/register', name: 'register', component: RegisterPage },
+  { path: '/services', name: 'services', component: ServicesPage },
 ];
 
 const router = createRouter({
