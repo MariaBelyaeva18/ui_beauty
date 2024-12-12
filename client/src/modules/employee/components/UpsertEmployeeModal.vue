@@ -35,7 +35,7 @@
       />
       <v-text-field
         class="mt-4"
-        label="Фамилия"
+        label="Телефон"
         density="comfortable"
         :model-value="employeeStore.form.phone"
         @input="employeeStore.form.phone = $event.target.value"
