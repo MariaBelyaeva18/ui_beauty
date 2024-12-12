@@ -115,6 +115,7 @@ const editHandler = (item) => {
     name: item.name,
     description: item.description,
     cost: item.cost,
+    duration: item.duration,
   };
 };
 
