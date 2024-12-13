@@ -39,6 +39,5 @@ pinia.use(({ store }) => {
 
 const mainStore = useMainStore();
 mainStore.getList();
-mainStore.getUserInfo();
 
 app.mount('#app');

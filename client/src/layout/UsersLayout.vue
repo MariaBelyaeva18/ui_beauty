@@ -92,7 +92,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useAuthStore } from '@/store/authStore';
 import { useMainStore } from '@/store/mainStore';
 
@@ -100,6 +100,10 @@ const authStore = useAuthStore();
 const mainStore = useMainStore();
 
 const getAvatarSrc = computed(() => `${import.meta.env.VITE_API_URL}/${mainStore.avatarPath}`);
+
+onMounted(() => {
+  mainStore.getUserInfo();
+});
 </script>
 
 <style lang="sass" scoped>

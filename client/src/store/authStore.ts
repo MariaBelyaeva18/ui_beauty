@@ -8,14 +8,16 @@ export const useAuthStore = defineStore('auth', {
       password: null,
     },
     message: null,
+    isAuth: false,
   }),
 
   actions: {
     async checkUser(payload) {
       try {
-        const { data: { data } } = await api.post('/auth', { ...payload });
+        const { data: { data } } = await api.post('/auth', payload);
         this.message = null;
         localStorage.setItem('user', JSON.stringify(data));
+        this.isAuth = true;
         this.router.push({ name: 'users' });
       } catch (e) {
         this.message = e.response.data.message;
