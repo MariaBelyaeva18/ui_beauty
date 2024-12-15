@@ -68,6 +68,12 @@
             value="employee"
             @click="$router.push('/employee')"
           />
+          <v-list-item
+            prepend-icon="mdi-calendar"
+            title="График отсутствий"
+            value="calendar"
+            @click="$router.push('/calendar')"
+          />
         </v-list>
 
         <template #append>

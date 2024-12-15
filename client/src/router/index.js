@@ -7,6 +7,7 @@ import ServicesPage from '@/modules/services/pages/ServicesPage.vue';
 import RegisterPage from '@/modules/register/pages/RegisterPage.vue';
 import EmployeePage from '@/modules/employee/registry/pages/EmployeePage.vue';
 import EmployeeDetailPage from '@/modules/employee/detail/pages/EmployeeDetailPage.vue';
+import CalendarPage from '@/modules/calendar/pages/CalendarPage.vue';
 
 const routes = [
   { path: '/', redirect: { path: '/auth' } },
@@ -15,6 +16,7 @@ const routes = [
   { path: '/storage', name: 'storage', component: StoragePage },
   { path: '/register', name: 'register', component: RegisterPage },
   { path: '/services', name: 'services', component: ServicesPage },
+  { path: '/calendar', name: 'calendar', component: CalendarPage },
   { path: '/employee', name: 'employee', component: EmployeePage },
   { path: '/employee/:employeeId', name: 'employeeDetail', component: EmployeeDetailPage },
 ];

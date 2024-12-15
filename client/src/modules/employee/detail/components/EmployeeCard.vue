@@ -88,6 +88,7 @@
             :model-value="employeeStore.detail.form.masterServiceIds"
             item-title="name"
             item-value="id"
+            density="comfortable"
             :return-object="false"
             :items="employeeStore.detail.services"
             @update:modelValue="employeeStore.detail.form.masterServiceIds = $event"

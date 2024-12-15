@@ -90,6 +90,7 @@
 
       <v-text-field
         label="Роль"
+        class="mt-2"
         density="comfortable"
         :model-value="mainStore.form.role_name"
         readonly
@@ -126,8 +127,8 @@ const getAvatarSrc = computed(() => `${import.meta.env.VITE_API_URL}/${mainStore
     flex: 1 1 auto
   &__additional-info
     .avatar
-      width: 200px
-      height: 200px
+      width: 198px
+      height: 198px
       border-radius: 50%
       &:hover
         filter: blur(8px)
