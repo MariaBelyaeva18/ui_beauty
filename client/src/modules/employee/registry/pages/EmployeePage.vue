@@ -7,7 +7,7 @@
       <v-btn
         color="blue-darken-4"
         variant="flat"
-        @click="employeeStore.addEmployeeModalView = true; employeeStore.mode = 'create'"
+        @click="$router.push('/employee/new')"
       >
         Добавить нового сотрудника
       </v-btn>
@@ -87,16 +87,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <UpsertEmployeeModal />
   </section>
 </template>
 
 <script setup>
 import { onMounted } from 'vue';
-import { headers } from '@/modules/employee/entities/headers';
+import { headers } from '@/modules/employee/registry/entities/headers';
 import { useEmployeeStore } from '@/store/employeeStore';
-import UpsertEmployeeModal from '@/modules/employee/components/UpsertEmployeeModal.vue';
 
 const employeeStore = useEmployeeStore();
 

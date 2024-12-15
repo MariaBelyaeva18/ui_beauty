@@ -5,7 +5,8 @@ import UsersPage from '@/modules/users/pages/UsersPage.vue';
 import StoragePage from '@/modules/storage/pages/StoragePage.vue';
 import ServicesPage from '@/modules/services/pages/ServicesPage.vue';
 import RegisterPage from '@/modules/register/pages/RegisterPage.vue';
-import EmployeePage from '@/modules/employee/pages/EmployeePage.vue';
+import EmployeePage from '@/modules/employee/registry/pages/EmployeePage.vue';
+import EmployeeDetailPage from '@/modules/employee/detail/pages/EmployeeDetailPage.vue';
 
 const routes = [
   { path: '/', redirect: { path: '/auth' } },
@@ -15,6 +16,7 @@ const routes = [
   { path: '/register', name: 'register', component: RegisterPage },
   { path: '/services', name: 'services', component: ServicesPage },
   { path: '/employee', name: 'employee', component: EmployeePage },
+  { path: '/employee/:employeeId', name: 'employeeDetail', component: EmployeeDetailPage },
 ];
 
 const router = createRouter({
