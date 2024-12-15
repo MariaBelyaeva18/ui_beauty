@@ -4,27 +4,27 @@
       <v-text-field
         label="Фамилия"
         density="comfortable"
-        :readonly="!mainStore.isEdit"
-        :model-value="mainStore.form.last_name"
-        @input="mainStore.form.last_name = $event.target.value"
+        :readonly="employeeStore.detail.mode === 'watch'"
+        :model-value="employeeStore.detail.form.lastName"
+        @input="employeeStore.detail.form.lastName = $event.target.value"
       />
       <v-row>
         <v-col cols="6">
           <v-text-field
             label="Имя"
             density="comfortable"
-            :readonly="!mainStore.isEdit"
-            :model-value="mainStore.form.name"
-            @input="mainStore.form.name = $event.target.value"
+            :readonly="employeeStore.detail.mode === 'watch'"
+            :model-value="employeeStore.detail.form.name"
+            @input="employeeStore.detail.form.name = $event.target.value"
           />
         </v-col>
         <v-col cols="6">
           <v-text-field
             label="Отчество"
             density="comfortable"
-            :readonly="!mainStore.isEdit"
-            :model-value="mainStore.form.middle_name"
-            @input="mainStore.form.middle_name = $event.target.value"
+            :readonly="employeeStore.detail.mode === 'watch'"
+            :model-value="employeeStore.detail.form.middleName"
+            @input="employeeStore.detail.form.middleName = $event.target.value"
           />
         </v-col>
       </v-row>
@@ -32,9 +32,9 @@
       <v-text-field
         label="Телефон"
         density="comfortable"
-        :readonly="!mainStore.isEdit"
-        :model-value="mainStore.form.phone"
-        @input="mainStore.form.phone = $event.target.value"
+        :readonly="employeeStore.detail.mode === 'watch'"
+        :model-value="employeeStore.detail.form.phone"
+        @input="employeeStore.detail.form.phone = $event.target.value"
       />
 
       <v-row>
@@ -42,24 +42,64 @@
           <v-text-field
             label="Логин"
             density="comfortable"
-            :readonly="!mainStore.isEdit"
-            :model-value="mainStore.form.username"
-            @input="mainStore.form.username = $event.target.value"
+            :readonly="employeeStore.detail.mode === 'watch'"
+            :model-value="employeeStore.detail.form.username"
+            @input="employeeStore.detail.form.username = $event.target.value"
           />
         </v-col>
         <v-col cols="6">
           <v-text-field
             label="Пароль"
             density="comfortable"
-            :readonly="!mainStore.isEdit"
-            :model-value="mainStore.form.password"
-            @input="mainStore.form.password = $event.target.value; console.log($event.target.value)"
+            :readonly="employeeStore.detail.mode === 'watch'"
+            :model-value="employeeStore.detail.form.password"
+            @input="employeeStore.detail.form.password = $event.target.value;"
           />
         </v-col>
       </v-row>
+      <v-row>
+        <v-col cols="6">
+          <v-select
+            class="mt-4"
+            label="Роль"
+            :readonly="employeeStore.detail.mode === 'watch'"
+            :items="employeeStore.detail.roles"
+            item-title="role"
+            item-value="id"
+            density="comfortable"
+            :model-value="employeeStore.detail.form.roleId"
+            @update:modelValue="employeeStore.detail.form.roleId = $event"
+          />
+        </v-col>
+        <v-col cols="6">
+          <v-combobox
+            class="mt-4"
+            multiple
+            label="Услуги"
+            :readonly="employeeStore.detail.mode === 'watch'"
+            :model-value="employeeStore.detail.form.masterServiceIds"
+            item-title="name"
+            item-value="id"
+            :return-object="false"
+            :items="employeeStore.detail.services"
+            @update:modelValue="employeeStore.detail.form.masterServiceIds = $event"
+          />
+        </v-col>
+      </v-row>
+      <v-file-input
+        v-if="employeeStore.detail.mode === 'create'"
+        label="Файл аватарки"
+        :model-value="employeeStore.detail.form.avatarFile"
+        prepend-icon="mdi-camera"
+        variant="filled"
+        @update:modelValue="employeeStore.detail.form.avatarFile = $event;"
+      />
     </div>
 
-    <div class="profile__additional-info">
+    <div
+      v-if="employeeStore.detail.mode !=='create'"
+      class="profile__additional-info"
+    >
       <v-img
         class="avatar"
         :src="getAvatarSrc"
@@ -76,7 +116,7 @@
         </template>
         <template #error>
           <v-img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7W6mLzWzyvqjcwfWJLW1uGM6G-dAsfgtFzw&s"
+            src="https://ps.w.org/wpmake-advance-user-avatar/assets/icon.svg?rev=3184986"
           />
         </template>
       </v-img>
@@ -87,34 +127,25 @@
         class="d-none"
         @change="updateAvatarHandler"
       >
-
-      <v-text-field
-        label="Роль"
-        density="comfortable"
-        :model-value="mainStore.form.role_name"
-        readonly
-      />
     </div>
   </section>
 </template>
 
 <script setup>
 
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
+import { useEmployeeStore } from '@/store/employeeStore';
 import { useMainStore } from '@/store/mainStore';
 
+const employeeStore = useEmployeeStore();
 const mainStore = useMainStore();
-
-onMounted(() => {
-  mainStore.getUserInfo();
-});
 
 const updateAvatarHandler = (event) => {
   const file = event.target.files[0];
   mainStore.updateAvatar(file);
 };
 
-const getAvatarSrc = computed(() => `${import.meta.env.VITE_API_URL}/${mainStore.avatarPath}`);
+const getAvatarSrc = computed(() => `${import.meta.env.VITE_API_URL}/${employeeStore.detail.avatarPath}`);
 
 </script>
 

@@ -53,7 +53,7 @@
             density="comfortable"
             :readonly="!mainStore.isEdit"
             :model-value="mainStore.form.password"
-            @input="mainStore.form.password = $event.target.value; console.log($event.target.value)"
+            @input="mainStore.form.password = $event.target.value;"
           />
         </v-col>
       </v-row>

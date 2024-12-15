@@ -49,7 +49,7 @@
         <v-icon
           size="small"
           @click="employeeStore.registry.deleteModalView = true;
-                  employeeStore.registry.form.id = item.id"
+                  employeeStore.registry.deleteId = item.id"
         >
           mdi-delete
         </v-icon>
@@ -80,7 +80,7 @@
           <v-btn
             color="blue-darken-1"
             variant="text"
-            @click="employeeStore.registry.delete(); employeeStore.registry.deleteModalView = false"
+            @click="employeeStore.delete(); employeeStore.registry.deleteModalView = false"
           >
             Удалить
           </v-btn>
@@ -95,39 +95,28 @@
 import { onMounted } from 'vue';
 import { headers } from '@/modules/employee/registry/entities/headers';
 import { useEmployeeStore } from '@/store/employeeStore';
+import router from '@/router';
 
 const employeeStore = useEmployeeStore();
 
 onMounted(() => {
   employeeStore.getList();
-  employeeStore.getServicesList();
 });
 
 const changePageHandler = (page) => {
   employeeStore.registry.tableSettingsInfo.offset = employeeStore
     .registry.tableSettingsInfo.limit * (page - 1);
 
-  employeeStore.registry.getList();
+  employeeStore.getList();
 };
 const changePageItemsHandler = (limit) => {
   employeeStore.registry.tableSettingsInfo.limit = limit;
 
-  employeeStore.registry.getList();
+  employeeStore.getList();
 };
 
 const editHandler = (item) => {
-  employeeStore.registry.addEmployeeModalView = true;
-  employeeStore.registry.mode = 'edit';
-
-  employeeStore.registry.form = {
-    id: item.id,
-    name: item.name,
-    middleName: item.middleName,
-    lastName: item.lastName,
-    phone: item.phone,
-    roleId: item.roleId,
-    masterServiceIds: item.masterServices.map((service) => service.id),
-  };
+  router.push(`/employee/${item.id}`);
 };
 
 </script>

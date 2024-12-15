@@ -3,7 +3,9 @@ import { api } from '../utils/Api.js';
 
 export const useEmployeeStore = defineStore('employee', {
   state: () => ({
+    /** Реестр */
     registry: {
+      deleteId: '',
       tableSettingsInfo: {
         limit: 10,
         offset: 0,
@@ -12,25 +14,32 @@ export const useEmployeeStore = defineStore('employee', {
       },
       /** Массив материалов со склада */
       data: [],
-      services: [],
 
       deleteModalView: false,
     },
-    mode: 'create' as 'create' | 'edit',
-    form: {
-      id: null,
-      name: '',
-      middleName: '',
-      lastName: '',
-      phone: '',
-      roleId: null,
-      masterServiceIds: []
-    },
-    loadingFlags: {
-      upsert: false,
-    },
 
-    addEmployeeModalView: false,
+    detail: {
+      mode: 'create' as 'create' | 'edit' | 'watch',
+      services: [],
+      roles: [],
+      avatarPath: '',
+      form: {
+        id: null,
+        name: '',
+        middleName: '',
+        lastName: '',
+        phone: '',
+        roleId: null,
+        avatarFile: '',
+        username: '',
+        password: '',
+        masterServiceIds: []
+      },
+      loadingFlags: {
+        upsert: false,
+        getDetail: false,
+      }
+    },
   }),
 
   actions: {
@@ -55,6 +64,33 @@ export const useEmployeeStore = defineStore('employee', {
     },
 
     /** Получение списка услуг */
+    async getDetailInfo(masterId: string) {
+      try {
+        this.detail.loadingFlags.getDetail = true;
+        const { data: { data } } = await api.get(`/employee/detail/${masterId}`);
+
+        this.detail.avatarPath = data.avatarPath
+
+        this.detail.form = {
+          id: data.id,
+          name: data.name,
+          middleName: data.middleName,
+          lastName: data.lastName,
+          phone: data.phone,
+          roleId:data.roleId,
+          username: data.username,
+          password: data.password,
+          masterServiceIds: data.masterServices,
+        }
+        this.registry.data = data.data;
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.detail.loadingFlags.getDetail = false;
+      }
+    },
+
+    /** Получение списка услуг */
     async getServicesList() {
       try {
         const { data: { data } } = await api.get('/services/list', {
@@ -64,59 +100,75 @@ export const useEmployeeStore = defineStore('employee', {
           },
         });
 
-        this.registry.services = data.data
+        this.detail.services = data.data
       } catch(e) {
         console.error(e)
       }
     },
 
+    /** Получение списка ролей */
+    async getRolesList() {
+      const { data: { data } } = await api.get('/roles');
+      this.detail.roles = data;
+    },
+
     /** Создание услуги */
     async create() {
       try {
-        this.loadingFlags.upsert = true;
-        await api.post('/employee', {
-          name: this.form.name,
-          middleName: this.form.middleName,
-          lastName: this.form.lastName,
-          phone: this.form.phone,
-          roleId: this.form.roleId,
-          masterServiceIds: this.form.masterServiceIds
+        this.detail.loadingFlags.upsert = true;
+
+        const formData = new FormData();
+        formData.append('file', this.detail.form.avatarFile);
+
+        formData.append('data', JSON.stringify({
+          name: this.detail.form.name,
+          middleName: this.detail.form.middleName,
+          lastName: this.detail.form.lastName,
+          phone: this.detail.form.phone,
+          roleId: this.detail.form.roleId,
+          username: this.detail.form.username,
+          password: this.detail.form.password,
+          masterServiceIds: this.detail.form.masterServiceIds
+        }));
+
+        await api.post('/employee', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         });
-        this.clearForm();
-        await this.getList();
       } catch (e) {
         console.error(e);
       } finally {
-        this.loadingFlags.upsert = false;
+        this.detail.loadingFlags.upsert = false;
       }
     },
 
     /** Обновление услуги */
     async update() {
       try {
-        this.loadingFlags.upsert = true;
+        this.detail.loadingFlags.upsert = true;
         await api.put('/employee', {
-          id: this.form.id,
-          name: this.form.name,
-          middleName: this.form.middleName,
-          lastName: this.form.lastName,
-          phone: this.form.phone,
-          roleId: this.form.roleId,
-          masterServiceIds: this.form.masterServiceIds
+          id: this.detail.form.id,
+          name: this.detail.form.name,
+          middleName: this.detail.form.middleName,
+          lastName: this.detail.form.lastName,
+          phone: this.detail.form.phone,
+          roleId: this.detail.form.roleId,
+          username: this.detail.form.username,
+          password: this.detail.form.password,
+          masterServiceIds: this.detail.form.masterServiceIds
         });
-        this.clearForm();
-        await this.getList();
       } catch (e) {
         console.error(e);
       } finally {
-        this.loadingFlags.upsert = false;
+        this.detail.loadingFlags.upsert = false;
       }
     },
 
     /** Удаление материала */
     async delete() {
       try {
-        await api.delete(`/employee/${this.form.id}`);
+        await api.delete(`/employee/${this.registry.deleteId}`);
 
         await this.getList();
       } catch (e) {
@@ -125,13 +177,17 @@ export const useEmployeeStore = defineStore('employee', {
     },
 
     clearForm() {
-      this.form = {
+      this.detail.form = {
         id: null,
         name: '',
         middleName: '',
         lastName: '',
         phone: '',
         roleId: null,
+        avatarFile: '',
+        username: '',
+        password: '',
+        masterServiceIds: []
       };
     }
 
