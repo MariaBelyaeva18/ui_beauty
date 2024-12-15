@@ -189,6 +189,21 @@ export const useEmployeeStore = defineStore('employee', {
         password: '',
         masterServiceIds: []
       };
+    },
+
+    /** Обновление аватара пользователя */
+    async updateAvatar(file) {
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      await api.post(`users/avatar/${this.detail.form.id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      await this.getDetailInfo(this.detail.form.id);
     }
 
   },

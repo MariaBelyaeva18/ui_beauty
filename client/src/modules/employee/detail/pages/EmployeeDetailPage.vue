@@ -51,11 +51,12 @@ onMounted(() => {
   employeeStore.getServicesList();
 
   const { employeeId } = router.currentRoute.value.params;
+  const { mode } = router.currentRoute.value.query;
 
   if (employeeId === 'new') {
     employeeStore.detail.mode = 'create';
   } else {
-    employeeStore.detail.mode = 'watch';
+    employeeStore.detail.mode = mode || 'watch';
     employeeStore.getDetailInfo(employeeId);
   }
 });

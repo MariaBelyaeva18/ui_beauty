@@ -116,7 +116,12 @@ const changePageItemsHandler = (limit) => {
 };
 
 const editHandler = (item) => {
-  router.push(`/employee/${item.id}`);
+  router.push({
+    path: (`/employee/${item.id}`),
+    query: {
+      mode: 'edit',
+    },
+  });
 };
 
 </script>

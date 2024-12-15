@@ -4,6 +4,7 @@
       <v-text-field
         label="Фамилия"
         density="comfortable"
+        :loading="employeeStore.detail.loadingFlags.getDetail"
         :readonly="employeeStore.detail.mode === 'watch'"
         :model-value="employeeStore.detail.form.lastName"
         @input="employeeStore.detail.form.lastName = $event.target.value"
@@ -13,6 +14,7 @@
           <v-text-field
             label="Имя"
             density="comfortable"
+            :loading="employeeStore.detail.loadingFlags.getDetail"
             :readonly="employeeStore.detail.mode === 'watch'"
             :model-value="employeeStore.detail.form.name"
             @input="employeeStore.detail.form.name = $event.target.value"
@@ -22,6 +24,7 @@
           <v-text-field
             label="Отчество"
             density="comfortable"
+            :loading="employeeStore.detail.loadingFlags.getDetail"
             :readonly="employeeStore.detail.mode === 'watch'"
             :model-value="employeeStore.detail.form.middleName"
             @input="employeeStore.detail.form.middleName = $event.target.value"
@@ -32,6 +35,7 @@
       <v-text-field
         label="Телефон"
         density="comfortable"
+        :loading="employeeStore.detail.loadingFlags.getDetail"
         :readonly="employeeStore.detail.mode === 'watch'"
         :model-value="employeeStore.detail.form.phone"
         @input="employeeStore.detail.form.phone = $event.target.value"
@@ -42,6 +46,7 @@
           <v-text-field
             label="Логин"
             density="comfortable"
+            :loading="employeeStore.detail.loadingFlags.getDetail"
             :readonly="employeeStore.detail.mode === 'watch'"
             :model-value="employeeStore.detail.form.username"
             @input="employeeStore.detail.form.username = $event.target.value"
@@ -51,6 +56,7 @@
           <v-text-field
             label="Пароль"
             density="comfortable"
+            :loading="employeeStore.detail.loadingFlags.getDetail"
             :readonly="employeeStore.detail.mode === 'watch'"
             :model-value="employeeStore.detail.form.password"
             @input="employeeStore.detail.form.password = $event.target.value;"
@@ -67,6 +73,7 @@
             item-title="role"
             item-value="id"
             density="comfortable"
+            :loading="employeeStore.detail.loadingFlags.getDetail"
             :model-value="employeeStore.detail.form.roleId"
             @update:modelValue="employeeStore.detail.form.roleId = $event"
           />
@@ -76,6 +83,7 @@
             class="mt-4"
             multiple
             label="Услуги"
+            :loading="employeeStore.detail.loadingFlags.getDetail"
             :readonly="employeeStore.detail.mode === 'watch'"
             :model-value="employeeStore.detail.form.masterServiceIds"
             item-title="name"
@@ -89,6 +97,7 @@
       <v-file-input
         v-if="employeeStore.detail.mode === 'create'"
         label="Файл аватарки"
+        :loading="employeeStore.detail.loadingFlags.getDetail"
         :model-value="employeeStore.detail.form.avatarFile"
         prepend-icon="mdi-camera"
         variant="filled"
@@ -135,14 +144,12 @@
 
 import { computed } from 'vue';
 import { useEmployeeStore } from '@/store/employeeStore';
-import { useMainStore } from '@/store/mainStore';
 
 const employeeStore = useEmployeeStore();
-const mainStore = useMainStore();
 
 const updateAvatarHandler = (event) => {
   const file = event.target.files[0];
-  mainStore.updateAvatar(file);
+  employeeStore.updateAvatar(file);
 };
 
 const getAvatarSrc = computed(() => `${import.meta.env.VITE_API_URL}/${employeeStore.detail.avatarPath}`);
