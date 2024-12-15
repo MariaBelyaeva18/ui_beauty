@@ -56,7 +56,7 @@ onMounted(() => {
   if (employeeId === 'new') {
     employeeStore.detail.mode = 'create';
   } else {
-    employeeStore.detail.mode = mode || 'watch';
+    employeeStore.detail.mode = mode === 'edit' ? 'edit' : 'watch';
     employeeStore.getDetailInfo(employeeId);
   }
 });
