@@ -46,28 +46,28 @@
       />
     </template>
     <template #append>
-      <!--      <v-btn-->
-      <!--        class="mr-2"-->
-      <!--        color="blue-darken-4"-->
-      <!--        variant="outlined"-->
-      <!--        @click="closeHandler "-->
-      <!--      >-->
-      <!--        Отменить-->
-      <!--      </v-btn>-->
-      <!--      <v-btn-->
-      <!--        color="blue-darken-4"-->
-      <!--        variant="flat"-->
-      <!--        :loading="calendarStore.loadingFlags.upsert"-->
-      <!--        @click="saveAbsenceHandler"-->
-      <!--      >-->
-      <!--        Сохранить-->
-      <!--      </v-btn>-->
+      <v-btn
+        class="mr-2"
+        color="blue-darken-4"
+        variant="outlined"
+        @click="closeHandler"
+      >
+        Отменить
+      </v-btn>
+      <v-btn
+        color="blue-darken-4"
+        variant="flat"
+        :loading="calendarStore.loadingFlags.upsert"
+        @click="saveAbsenceHandler"
+      >
+        Сохранить
+      </v-btn>
     </template>
   </v-navigation-drawer>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useCalendarStore } from '@/store/calendarStore';
 
 const calendarStore = useCalendarStore();
@@ -81,7 +81,10 @@ const getTitle = computed(() => (calendarStore.mode === 'create'
   : 'Обновление отсутствия'
 ));
 
-const menu2 = ref(false);
+const closeHandler = () => {
+  calendarStore.addAbsenceModalView = false;
+  calendarStore.clearForm();
+};
 
 const saveAbsenceHandler = async () => {
   if (calendarStore.mode === 'create') {
@@ -89,11 +92,6 @@ const saveAbsenceHandler = async () => {
   } else {
     await calendarStore.update();
   }
-  calendarStore.addAbsenceModalView = false;
-};
-
-const closeHandler = () => {
-  calendarStore.addAbsenceModalView = false;
-  // calendarStore.clearForm();
+  closeHandler();
 };
 </script>

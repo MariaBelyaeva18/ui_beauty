@@ -18,7 +18,7 @@
         <button @click="changeMonth(-1)">
           ←
         </button>
-        <h2>{{ monthNames[currentMonth] }} {{ currentYear }}</h2>
+        <h2>{{ monthNames[calendarStore.currentMonth] }} {{ calendarStore.currentYear }}</h2>
         <button @click="changeMonth(1)">
           →
         </button>
@@ -46,13 +46,14 @@
             :key="absence.id"
           >
             <!-- Имя сотрудника -->
-            <td>{{ absence.name }}</td>
+            <td>{{ absence.employee.name }}</td>
             <!-- Даты с проверкой на отсутствие -->
             <td
               v-for="day in daysInMonth"
               :key="day"
-              :class="{ 'absent': isAbsent(absence, currentYear, currentMonth, day) }"
-              :title="getAbsenceReason(absence, currentYear, currentMonth, day)"
+              :class="{ 'absent': isAbsent(absence, day) }"
+              :title="getAbsenceReason(absence, day)"
+              @click="isAbsent(absence, day) && updateHandler(absence)"
             />
           </tr>
         </tbody>
@@ -62,69 +63,89 @@
   </section>
 </template>
 
-<script>
+<script setup>
+import { computed, onMounted, ref } from 'vue';
 import { useCalendarStore } from '@/store/calendarStore';
 import UpsertCalendarModal from '@/modules/calendar/components/UpsertCalendarModal.vue';
 
-export default {
-  components: { UpsertCalendarModal },
-  data() {
-    return {
-      calendarStore: useCalendarStore(),
-      currentMonth: new Date().getMonth(), // Текущий месяц (0 - январь)
-      currentYear: new Date().getFullYear(), // Текущий год
-      monthNames: [
-        'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-        'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
-      ],
-    };
-  },
-  computed: {
-    // Получение количества дней в текущем месяце
-    daysInMonth() {
-      const totalDays = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
-      return Array.from({ length: totalDays }, (_, i) => i + 1);
-    },
-  },
-  mounted() {
-    this.calendarStore.getAbsence();
-  },
-  methods: {
-    // Форматирование дня в двузначный вид
-    formatDay(day) {
-      return day.toString().padStart(2, '0');
-    },
-    // Проверка на попадание дня в диапазон отсутствия
-    isAbsent(absence, year, month, day) {
-      const currentDate = new Date(year, month, day); // Текущая дата в календаре
+const calendarStore = useCalendarStore();
 
-      const fromDate = new Date(absence.dateFrom);
-      const toDate = new Date(absence.dateTo);
+onMounted(() => {
+  calendarStore.currentYear = new Date().getFullYear();
+  calendarStore.currentMonth = new Date().getMonth();
 
-      return currentDate >= fromDate && currentDate <= toDate;
-    },
-    // Получение причины отсутствия для конкретного дня
-    getAbsenceReason(absence, year, month, day) {
-      const currentDate = new Date(year, month, day); // Текущая дата в календаре
+  calendarStore.getAbsence();
+});
 
-      const fromDate = new Date(absence.dateFrom);
-      const toDate = new Date(absence.dateTo);
+const monthNames = ref([
+  'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+  'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
+]);
 
-      return currentDate >= fromDate && currentDate <= toDate ? absence.reason : '';
-    },
-    // Смена месяца вперед или назад
-    changeMonth(direction) {
-      this.currentMonth += direction;
+const daysInMonth = computed(() => {
+  const totalDays = new Date(
+    calendarStore.currentYear,
+    calendarStore.currentMonth + 1,
+    0,
+  ).getDate();
+  return Array.from({ length: totalDays }, (_, i) => i + 1);
+});
 
-      if (this.currentMonth < 0) {
-        this.currentMonth = 11;
-        this.currentYear--;
-      } else if (this.currentMonth > 11) {
-        this.currentMonth = 0;
-        this.currentYear++;
-      }
-    },
-  },
+// Форматирование дня в двузначный вид
+const formatDay = (day) => day.toString().padStart(2, '0');
+
+// Проверка на попадание дня в диапазон отсутствия
+const isAbsent = (absence, day) => {
+  const currentDate = new Date(
+    calendarStore.currentYear,
+    calendarStore.currentMonth,
+    day,
+  ); // Текущая дата в календаре
+
+  const fromDate = new Date(absence.dateFrom);
+  const toDate = new Date(absence.dateTo);
+
+  return currentDate >= fromDate && currentDate <= toDate;
+};
+
+// Получение причины отсутствия для конкретного дня
+const getAbsenceReason = (absence, day) => {
+  const currentDate = new Date(
+    calendarStore.currentYear,
+    calendarStore.currentMonth,
+    day,
+  ); // Текущая дата в календаре
+
+  const fromDate = new Date(absence.dateFrom);
+  const toDate = new Date(absence.dateTo);
+
+  return currentDate >= fromDate && currentDate <= toDate ? absence.reason : '';
+};
+
+// Смена месяца вперед или назад
+const changeMonth = (direction) => {
+  calendarStore.currentMonth += direction;
+
+  if (calendarStore.currentMonth < 0) {
+    calendarStore.currentMonth = 11;
+    calendarStore.currentYear -= 1;
+  } else if (calendarStore.currentMonth > 11) {
+    calendarStore.currentMonth = 0;
+    calendarStore.currentYear += 1;
+  }
+};
+
+const updateHandler = (absence) => {
+  calendarStore.form = {
+    id: absence.id,
+    employeeId: absence.employee.id,
+    dateFrom: new Date(absence.dateFrom),
+    dateTo: new Date(absence.dateTo),
+    reason: absence.reason,
+  };
+
+  calendarStore.mode = 'edit';
+  calendarStore.addAbsenceModalView = true;
 };
 </script>
 
