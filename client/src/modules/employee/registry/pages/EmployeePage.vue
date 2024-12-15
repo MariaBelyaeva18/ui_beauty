@@ -14,17 +14,17 @@
     </div>
 
     <v-data-table-server
-      :items-per-page="employeeStore.tableSettingsInfo.limit"
+      :items-per-page="employeeStore.registry.tableSettingsInfo.limit"
       :headers="headers"
-      :items="employeeStore.data"
+      :items="employeeStore.registry.data"
       :items-per-page-options="[
         {value: 10, title: '10'},
         {value: 25, title: '25'},
         {value: 50, title: '50'},
         {value: 100, title: '100'},
       ]"
-      :items-length="employeeStore.tableSettingsInfo.totalItems"
-      :loading="employeeStore.tableSettingsInfo.loading"
+      :items-length="employeeStore.registry.tableSettingsInfo.totalItems"
+      :loading="employeeStore.registry.tableSettingsInfo.loading"
       item-value="id"
       @update:page="changePageHandler"
       @update:items-per-page="changePageItemsHandler"
@@ -48,7 +48,8 @@
         </v-icon>
         <v-icon
           size="small"
-          @click="employeeStore.deleteModalView = true; employeeStore.form.id = item.id"
+          @click="employeeStore.registry.deleteModalView = true;
+                  employeeStore.registry.form.id = item.id"
         >
           mdi-delete
         </v-icon>
@@ -56,9 +57,9 @@
     </v-data-table-server>
 
     <v-dialog
-      :model-value="employeeStore.deleteModalView"
+      :model-value="employeeStore.registry.deleteModalView"
       max-width="500px"
-      @update:model-value="employeeStore.deleteModalView = $event"
+      @update:model-value="employeeStore.registry.deleteModalView = $event"
     >
       <v-card>
         <v-card-text>
@@ -72,14 +73,14 @@
           <v-btn
             color="blue-darken-1"
             variant="text"
-            @click="employeeStore.deleteModalView = false"
+            @click="employeeStore.registry.deleteModalView = false"
           >
             Отмена
           </v-btn>
           <v-btn
             color="blue-darken-1"
             variant="text"
-            @click="employeeStore.delete(); employeeStore.deleteModalView = false"
+            @click="employeeStore.registry.delete(); employeeStore.registry.deleteModalView = false"
           >
             Удалить
           </v-btn>
@@ -103,21 +104,22 @@ onMounted(() => {
 });
 
 const changePageHandler = (page) => {
-  employeeStore.tableSettingsInfo.offset = employeeStore.tableSettingsInfo.limit * (page - 1);
+  employeeStore.registry.tableSettingsInfo.offset = employeeStore
+    .registry.tableSettingsInfo.limit * (page - 1);
 
-  employeeStore.getList();
+  employeeStore.registry.getList();
 };
 const changePageItemsHandler = (limit) => {
-  employeeStore.tableSettingsInfo.limit = limit;
+  employeeStore.registry.tableSettingsInfo.limit = limit;
 
-  employeeStore.getList();
+  employeeStore.registry.getList();
 };
 
 const editHandler = (item) => {
-  employeeStore.addEmployeeModalView = true;
-  employeeStore.mode = 'edit';
+  employeeStore.registry.addEmployeeModalView = true;
+  employeeStore.registry.mode = 'edit';
 
-  employeeStore.form = {
+  employeeStore.registry.form = {
     id: item.id,
     name: item.name,
     middleName: item.middleName,

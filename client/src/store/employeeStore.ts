@@ -3,6 +3,19 @@ import { api } from '../utils/Api.js';
 
 export const useEmployeeStore = defineStore('employee', {
   state: () => ({
+    registry: {
+      tableSettingsInfo: {
+        limit: 10,
+        offset: 0,
+        totalItems: 0,
+        loading: false,
+      },
+      /** Массив материалов со склада */
+      data: [],
+      services: [],
+
+      deleteModalView: false,
+    },
     mode: 'create' as 'create' | 'edit',
     form: {
       id: null,
@@ -17,39 +30,27 @@ export const useEmployeeStore = defineStore('employee', {
       upsert: false,
     },
 
-    tableSettingsInfo: {
-      limit: 10,
-      offset: 0,
-      totalItems: 0,
-      loading: false,
-    },
-
-    /** Массив материалов со склада */
-    data: [],
-    services: [],
-
     addEmployeeModalView: false,
-    deleteModalView: false,
   }),
 
   actions: {
     /** Получение списка услуг */
     async getList() {
       try {
-        this.tableSettingsInfo.loading = true;
+        this.registry.tableSettingsInfo.loading = true;
         const { data: { data } } = await api.get('/employee/list', {
           params: {
-            limit: this.tableSettingsInfo.limit,
-            offset: this.tableSettingsInfo.offset,
+            limit: this.registry.tableSettingsInfo.limit,
+            offset: this.registry.tableSettingsInfo.offset,
           },
         });
 
-        this.data = data.data;
-        this.tableSettingsInfo.totalItems = data.totalCount;
+        this.registry.data = data.data;
+        this.registry.tableSettingsInfo.totalItems = data.totalCount;
       } catch (e) {
         console.error(e);
       } finally {
-        this.tableSettingsInfo.loading = false;
+        this.registry.tableSettingsInfo.loading = false;
       }
     },
 
@@ -63,7 +64,7 @@ export const useEmployeeStore = defineStore('employee', {
           },
         });
 
-        this.services = data.data
+        this.registry.services = data.data
       } catch(e) {
         console.error(e)
       }
