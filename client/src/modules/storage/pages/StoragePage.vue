@@ -115,7 +115,7 @@ const editHandler = (item) => {
     id: item.id,
     materialName: item.name,
     amount: item.amount,
-    expirationDate: item.expirationDate,
+    expirationDate: new Date(item.expirationDate),
   };
 };
 
