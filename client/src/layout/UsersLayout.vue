@@ -74,6 +74,12 @@
             value="calendar"
             @click="$router.push('/calendar')"
           />
+          <v-list-item
+            prepend-icon="mdi-archive-plus-outline"
+            title="Заказы"
+            value="orders"
+            @click="$router.push('/orders')"
+          />
         </v-list>
 
         <template #append>
