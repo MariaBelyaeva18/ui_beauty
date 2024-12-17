@@ -30,7 +30,7 @@ export const useOrdersStore = defineStore('orders', {
     /** Список мастеров */
     masters: [],
     addOrderModalView: false,
-    deleteModalView: false,
+    cancelModalView: false,
   }),
 
   actions: {
@@ -142,9 +142,31 @@ export const useOrdersStore = defineStore('orders', {
     },
 
     /** Отмена заказа */
-    async cancel() {
+    async cancelOrder() {
       try {
-        await api.patch(`/orders/${this.form.id}`);
+        await api.patch(`/orders/cancel/${this.form.id}`);
+
+        await this.getList();
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    /** Взятие в работу заказа */
+    async acceptOrder() {
+      try {
+        await api.patch(`/orders/accept/${this.form.id}`);
+
+        await this.getList();
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    /** Завершение заказа */
+    async doneOrder() {
+      try {
+        await api.patch(`/orders/done/${this.form.id}`);
 
         await this.getList();
       } catch (e) {

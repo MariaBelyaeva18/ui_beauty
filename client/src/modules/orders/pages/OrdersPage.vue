@@ -37,49 +37,66 @@
         </v-chip>
       </template>
       <template #item.actions="{ item }">
-        <v-icon
-          class="me-2"
-          size="small"
-          @click="editHandler(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-          size="small"
-          @click="ordersStore.deleteModalView = true; ordersStore.form.id = item.id"
-        >
-          mdi-delete
-        </v-icon>
+        <div class="d-flex ga-1">
+          <v-icon
+            size="small"
+            title="Редактировать заказ"
+            @click="editHandler(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            size="small"
+            title="Отменить заказ"
+            @click="ordersStore.cancelModalView = true; ordersStore.form.id = item.id"
+          >
+            mdi-cancel
+          </v-icon>
+          <v-icon
+            size="small"
+            title="Взять в работу"
+            @click="ordersStore.acceptOrder()"
+          >
+            mdi-briefcase-outline
+          </v-icon>
+          <v-icon
+            size="small"
+            title="Завершить заказ"
+            @click="ordersStore.doneOrder()"
+          >
+            mdi-check
+          </v-icon>
+        </div>
       </template>
     </v-data-table-server>
 
     <v-dialog
-      :model-value="ordersStore.deleteModalView"
+      :model-value="ordersStore.cancelModalView"
       max-width="500px"
-      @update:model-value="ordersStore.deleteModalView = $event"
+      @update:model-value="ordersStore.cancelModalView = $event"
     >
       <v-card>
         <v-card-text>
-          Удаление услуги
+          Отмена заказа
         </v-card-text>
         <v-card-text class="text-h5">
-          Вы уверены, что хотите продолжить удаление?
+          Вы уверены, что хотите продолжить отмену?
         </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn
             color="blue-darken-1"
             variant="text"
-            @click="ordersStore.deleteModalView = false"
+            @click="ordersStore.cancelModalView = false"
           >
             Отмена
           </v-btn>
           <v-btn
             color="blue-darken-1"
             variant="text"
-            @click="ordersStore.delete(); ordersStore.deleteModalView = false"
+            @click="ordersStore.cancelOrder(); ordersStore.cancelModalView = false"
           >
-            Удалить
+            Продолжить
           </v-btn>
           <v-spacer />
         </v-card-actions>
@@ -122,10 +139,12 @@ const editHandler = (item) => {
   ordersStore.form = {
     id: item.id,
     executionDate: item.executionDate,
-    serviceId: item.serviceId,
-    masterId: item.masterId,
+    serviceId: item.service.id,
+    masterId: item.master.id,
     description: item.description,
   };
+
+  ordersStore.masters = [item.master];
 };
 
 </script>
