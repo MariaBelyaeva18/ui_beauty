@@ -8,6 +8,7 @@ import RegisterPage from '@/modules/register/pages/RegisterPage.vue';
 import EmployeePage from '@/modules/employee/registry/pages/EmployeePage.vue';
 import EmployeeDetailPage from '@/modules/employee/detail/pages/EmployeeDetailPage.vue';
 import CalendarPage from '@/modules/calendar/pages/CalendarPage.vue';
+import DocsPage from '@/modules/docs/pages/DocsPage.vue';
 
 const routes = [
   { path: '/', redirect: { path: '/auth' } },
@@ -18,6 +19,7 @@ const routes = [
   { path: '/services', name: 'services', component: ServicesPage },
   { path: '/calendar', name: 'calendar', component: CalendarPage },
   { path: '/employee', name: 'employee', component: EmployeePage },
+  { path: '/docs', name: 'docs', component: DocsPage },
   { path: '/employee/:employeeId', name: 'employeeDetail', component: EmployeeDetailPage },
 ];
 

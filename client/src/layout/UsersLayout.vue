@@ -77,9 +77,13 @@
         </v-list>
 
         <template #append>
-          <div class="pa-2">
+          <div class="pa-2 d-flex flex-column align-center">
+            <a
+              href="/docs"
+            >Руководство пользователя</a>
             <v-btn
               block
+              class="mt-6"
               @click="authStore.logout()"
             >
               Logout
