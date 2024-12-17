@@ -55,14 +55,14 @@
           <v-icon
             size="small"
             title="Взять в работу"
-            @click="ordersStore.acceptOrder()"
+            @click="ordersStore.acceptOrder(item.id)"
           >
             mdi-briefcase-outline
           </v-icon>
           <v-icon
             size="small"
             title="Завершить заказ"
-            @click="ordersStore.doneOrder()"
+            @click="ordersStore.doneOrder(item.id)"
           >
             mdi-check
           </v-icon>

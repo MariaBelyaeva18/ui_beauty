@@ -153,9 +153,9 @@ export const useOrdersStore = defineStore('orders', {
     },
 
     /** Взятие в работу заказа */
-    async acceptOrder() {
+    async acceptOrder(orderId: string) {
       try {
-        await api.patch(`/orders/accept/${this.form.id}`);
+        await api.patch(`/orders/accept/${orderId}`);
 
         await this.getList();
       } catch (e) {
@@ -164,9 +164,9 @@ export const useOrdersStore = defineStore('orders', {
     },
 
     /** Завершение заказа */
-    async doneOrder() {
+    async doneOrder(orderId: string) {
       try {
-        await api.patch(`/orders/done/${this.form.id}`);
+        await api.patch(`/orders/done/${orderId}`);
 
         await this.getList();
       } catch (e) {
