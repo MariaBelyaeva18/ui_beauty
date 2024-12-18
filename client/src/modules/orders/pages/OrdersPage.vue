@@ -4,13 +4,23 @@
       <h1>
         Заказы
       </h1>
-      <v-btn
-        color="blue-darken-4"
-        variant="flat"
-        @click="ordersStore.addOrderModalView = true; ordersStore.mode = 'create'"
-      >
-        Добавить новый заказ
-      </v-btn>
+      <div>
+        <v-btn
+          class="mr-4"
+          color="blue-darken-4"
+          variant="flat"
+          @click="printPdf()"
+        >
+          Сгенерировать отчет
+        </v-btn>
+        <v-btn
+          color="blue-darken-4"
+          variant="flat"
+          @click="ordersStore.addOrderModalView = true; ordersStore.mode = 'create'"
+        >
+          Добавить новый заказ
+        </v-btn>
+      </div>
     </div>
 
     <v-data-table-server
@@ -145,6 +155,23 @@ const editHandler = (item) => {
   };
 
   ordersStore.masters = [item.master];
+};
+
+const printPdf = async () => {
+  try {
+    const newTab = window.open('http://localhost:8080/orders/report', '_blank');
+
+    setTimeout(() => {
+      if (newTab) {
+        console.log('HERERER');
+        newTab.print(); // Открывает диалог печати
+      } else {
+        console.error('Не удалось открыть новое окно');
+      }
+    }, 5000);
+  } catch (error) {
+    console.error('Ошибка при печати PDF:', error);
+  }
 };
 
 </script>
