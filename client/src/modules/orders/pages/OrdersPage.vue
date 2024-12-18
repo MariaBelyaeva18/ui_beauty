@@ -4,15 +4,26 @@
       <h1>
         Заказы
       </h1>
-      <v-btn
-        v-if="mainStore.form.role_name === 'Клиент'"
-        color="blue-darken-4"
-        variant="flat"
-        @click="ordersStore.addOrderModalView = true; ordersStore.mode = 'create'"
-      >
-        Добавить новый заказ
-      </v-btn>
+      <div>
+        <v-btn
+          class="mr-4"
+          color="blue-darken-4"
+          variant="flat"
+          @click="printPdf()"
+        >
+          Сгенерировать отчет
+        </v-btn>
+        <v-btn
+            v-if="mainStore.form.role_name === 'Клиент'"
+            color="blue-darken-4"
+            variant="flat"
+            @click="ordersStore.addOrderModalView = true; ordersStore.mode = 'create'"
+        >
+          Добавить новый заказ
+        </v-btn>
+      </div>
     </div>
+
     <v-data-table-server
       :items-per-page="ordersStore.tableSettingsInfo.limit"
       :headers="headers"
@@ -37,9 +48,7 @@
         </v-chip>
       </template>
       <template #item.actions="{ item }">
-        <div
-          class="d-flex ga-1"
-        >
+        <div class="d-flex ga-1">
           <v-icon
             v-if="mainStore.form.role_name === 'Клиент'"
             size="small"
@@ -162,6 +171,23 @@ const currentUserOrders = () => {
     return ordersStore.data.filter((el) => el.master.id === mainStore.form.id);
   }
   return ordersStore.data;
+};
+
+const printPdf = async () => {
+  try {
+    const newTab = window.open('http://localhost:8080/orders/report', '_blank');
+
+    setTimeout(() => {
+      if (newTab) {
+        console.log('HERERER');
+        newTab.print(); // Открывает диалог печати
+      } else {
+        console.error('Не удалось открыть новое окно');
+      }
+    }, 5000);
+  } catch (error) {
+    console.error('Ошибка при печати PDF:', error);
+  }
 };
 
 </script>
