@@ -8,6 +8,7 @@ export const useMainStore = defineStore('main', {
     isEdit: false,
     avatarPath: '',
     form: {
+      id: null,
       name: null,
       middle_name: null,
       last_name: null,
@@ -32,6 +33,7 @@ export const useMainStore = defineStore('main', {
       this.avatarPath = data.avatar_path;
 
       this.form = {
+        id: data.id,
         name: data.name,
         middle_name: data.middle_name,
         last_name: data.last_name,

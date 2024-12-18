@@ -20,7 +20,7 @@
         @input="storageStore.form.materialName = $event.target.value"
       />
       <v-text-field
-        label="Название материала"
+        label="Количество материала"
         density="comfortable"
         :model-value="storageStore.form.amount"
         @input="storageStore.form.amount = $event.target.value"

@@ -5,6 +5,7 @@
         График отсутствий
       </h1>
       <v-btn
+        v-if="mainStore.form.role_name === 'Управляющий'"
         color="blue-darken-4"
         variant="flat"
         @click="calendarStore.addAbsenceModalView = true; calendarStore.mode = 'create'"
@@ -67,8 +68,10 @@
 import { computed, onMounted, ref } from 'vue';
 import { useCalendarStore } from '@/store/calendarStore';
 import UpsertCalendarModal from '@/modules/calendar/components/UpsertCalendarModal.vue';
+import { useMainStore } from '@/store/mainStore';
 
 const calendarStore = useCalendarStore();
+const mainStore = useMainStore();
 
 onMounted(() => {
   calendarStore.currentYear = new Date().getFullYear();

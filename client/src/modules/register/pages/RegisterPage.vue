@@ -31,7 +31,7 @@
       />
       <v-select
         label="Роль"
-        :items="mainStore.roles"
+        :items="mainStore.roles.filter((el) => el.role === 'Клиент')"
         item-title="role"
         item-value="id"
         :rules="rules"
@@ -61,6 +61,12 @@
           :model-value="registerStore.form.repeatPassword"
           @input="registerStore.form.repeatPassword = $event.target.value"
         />
+      </div>
+      <div
+        v-if="registerStore.form.password !== registerStore.form.repeatPassword"
+        class="text-red"
+      >
+        Пароли не совпадают
       </div>
       <div>
         <v-btn

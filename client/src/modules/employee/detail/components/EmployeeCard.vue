@@ -69,7 +69,7 @@
             class="mt-4"
             label="Роль"
             :readonly="employeeStore.detail.mode === 'watch'"
-            :items="employeeStore.detail.roles"
+            :items="employeeStore.detail.roles.filter((el) => el.role !== 'Клиент')"
             item-title="role"
             item-value="id"
             density="comfortable"

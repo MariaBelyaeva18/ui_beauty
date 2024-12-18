@@ -51,24 +51,28 @@
           nav
         >
           <v-list-item
+            v-if="mainStore.form.role_name === 'Управляющий'"
             prepend-icon="mdi-package-variant"
             title="Склад"
             value="storage"
             @click="$router.push('/storage')"
           />
           <v-list-item
+            v-if="mainStore.form.role_name === 'Управляющий'"
             prepend-icon="mdi-room-service"
             title="Услуги"
             value="services"
             @click="$router.push('/services')"
           />
           <v-list-item
+            v-if="mainStore.form.role_name === 'Управляющий'"
             prepend-icon="mdi-account"
             title="Сотрудники"
             value="employee"
             @click="$router.push('/employee')"
           />
           <v-list-item
+            v-if="mainStore.form.role_name !== 'Клиент'"
             prepend-icon="mdi-calendar"
             title="График отсутствий"
             value="calendar"

@@ -5,6 +5,7 @@
         Заказы
       </h1>
       <v-btn
+        v-if="mainStore.form.role_name === 'Клиент'"
         color="blue-darken-4"
         variant="flat"
         @click="ordersStore.addOrderModalView = true; ordersStore.mode = 'create'"
@@ -12,11 +13,10 @@
         Добавить новый заказ
       </v-btn>
     </div>
-
     <v-data-table-server
       :items-per-page="ordersStore.tableSettingsInfo.limit"
       :headers="headers"
-      :items="ordersStore.data"
+      :items="currentUserOrders()"
       :items-per-page-options="[
         {value: 10, title: '10'},
         {value: 25, title: '25'},
@@ -37,8 +37,11 @@
         </v-chip>
       </template>
       <template #item.actions="{ item }">
-        <div class="d-flex ga-1">
+        <div
+          class="d-flex ga-1"
+        >
           <v-icon
+            v-if="mainStore.form.role_name === 'Клиент'"
             size="small"
             title="Редактировать заказ"
             @click="editHandler(item)"
@@ -53,6 +56,7 @@
             mdi-cancel
           </v-icon>
           <v-icon
+            v-if="mainStore.form.role_name !== 'Клиент'"
             size="small"
             title="Взять в работу"
             @click="ordersStore.acceptOrder(item.id)"
@@ -60,6 +64,7 @@
             mdi-briefcase-outline
           </v-icon>
           <v-icon
+            v-if="mainStore.form.role_name !== 'Клиент'"
             size="small"
             title="Завершить заказ"
             @click="ordersStore.doneOrder(item.id)"
@@ -113,8 +118,10 @@ import { useOrdersStore } from '@/store/ordersStore';
 import UpsertOrderModal from '@/modules/orders/components/UpsertOrderModal.vue';
 import { headers } from '@/modules/orders/entities/headers';
 import { statuses } from '@/modules/services/entities/statuses';
+import { useMainStore } from '@/store/mainStore';
 
 const ordersStore = useOrdersStore();
+const mainStore = useMainStore();
 
 onMounted(() => {
   ordersStore.getList();
@@ -145,6 +152,16 @@ const editHandler = (item) => {
   };
 
   ordersStore.masters = [item.master];
+};
+
+const currentUserOrders = () => {
+  if (mainStore.form.role_name === 'Клиент') {
+    return ordersStore.data.filter((el) => el.client.id === mainStore.form.id);
+  }
+  if (mainStore.form.role_name === 'Мастер') {
+    return ordersStore.data.filter((el) => el.master.id === mainStore.form.id);
+  }
+  return ordersStore.data;
 };
 
 </script>
