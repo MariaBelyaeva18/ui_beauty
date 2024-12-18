@@ -133,6 +133,7 @@ const changeMonth = (direction) => {
     calendarStore.currentMonth = 0;
     calendarStore.currentYear += 1;
   }
+  calendarStore.getAbsence();
 };
 
 const updateHandler = (absence) => {
