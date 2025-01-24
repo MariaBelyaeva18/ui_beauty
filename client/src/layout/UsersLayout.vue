@@ -4,7 +4,7 @@
   >
     <v-app>
       <v-app-bar
-        title="Beauty help"
+        title="Название салона красоты"
         @click="$router.push('/')"
       >
         <template #append>
@@ -35,15 +35,22 @@
             </template>
             <template #error>
               <v-img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7W6mLzWzyvqjcwfWJLW1uGM6G-dAsfgtFzw&s"
+                src="https://img.freepik.com/premium-vector/avatar-icon_791764-3410.jpg"
               />
             </template>
           </v-img>
+          <v-btn
+            @click="authStore.logout()"
+          >
+            <v-icon
+              icon="mdi-logout"
+            />
+          </v-btn>
         </template>
       </v-app-bar>
 
       <v-navigation-drawer
-        class="bg-deep-purple"
+        class="bg-green"
         theme="dark"
         permanent
       >
@@ -91,13 +98,6 @@
             <a
               href="/docs"
             >Руководство пользователя</a>
-            <v-btn
-              block
-              class="mt-6"
-              @click="authStore.logout()"
-            >
-              Logout
-            </v-btn>
           </div>
         </template>
       </v-navigation-drawer>
