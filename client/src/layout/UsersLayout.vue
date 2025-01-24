@@ -4,12 +4,13 @@
   >
     <v-app>
       <v-app-bar
+        class="bg-amber"
         title="Название салона красоты"
         @click="$router.push('/')"
       >
         <template #append>
-          <div class="d-flex flex-column mr-2">
-            <span>
+          <div class="d-flex flex-row mr-2">
+            <span class="mr-2">
               {{ mainStore.form.name }}
             </span>
             <span>
