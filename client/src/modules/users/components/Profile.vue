@@ -127,10 +127,10 @@ const getAvatarSrc = computed(() => `${import.meta.env.VITE_API_URL}/${mainStore
     flex: 1 1 auto
   &__additional-info
     .avatar
-    width: 198px
-    height: 198px
-    border-radius: 50%
-    &:hover
-      filter: blur(8px)
-      cursor: pointer
+      width: 198px
+      height: 198px
+      border-radius: 50%
+      &:hover
+        filter: blur(8px)
+        cursor: pointer
 </style>
