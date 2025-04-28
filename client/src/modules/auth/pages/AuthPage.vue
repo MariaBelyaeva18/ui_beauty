@@ -22,6 +22,7 @@
         hide-details
         :model-value="authStore.form.username"
         @input="authStore.form.username = $event.target.value"
+        @keydown.enter="loginButton(authStore.form)"
       />
       <v-text-field
         class="auth_input"
@@ -30,6 +31,7 @@
         hide-details
         :model-value="authStore.form.password"
         @input="authStore.form.password = $event.target.value"
+        @keydown.enter="loginButton(authStore.form)"
       />
     </div>
     <div>

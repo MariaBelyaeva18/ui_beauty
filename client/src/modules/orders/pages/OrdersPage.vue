@@ -6,18 +6,10 @@
       </h1>
       <div>
         <v-btn
-          class="mr-4"
+          v-if="mainStore.form.role_name === 'Клиент'"
           color="blue-darken-4"
           variant="flat"
-          @click="printPdf()"
-        >
-          Сгенерировать отчет
-        </v-btn>
-        <v-btn
-            v-if="mainStore.form.role_name === 'Клиент'"
-            color="blue-darken-4"
-            variant="flat"
-            @click="ordersStore.addOrderModalView = true; ordersStore.mode = 'create'"
+          @click="ordersStore.addOrderModalView = true; ordersStore.mode = 'create'"
         >
           Добавить новый заказ
         </v-btn>
