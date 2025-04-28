@@ -30,6 +30,14 @@
       </v-row>
 
       <v-text-field
+        label="Роль"
+        class="mt-2"
+        density="comfortable"
+        :model-value="mainStore.form.role_name"
+        readonly
+      />
+
+      <v-text-field
         label="Телефон"
         density="comfortable"
         :readonly="!mainStore.isEdit"
@@ -76,7 +84,7 @@
         </template>
         <template #error>
           <v-img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7W6mLzWzyvqjcwfWJLW1uGM6G-dAsfgtFzw&s"
+            src="https://img.freepik.com/premium-vector/avatar-icon_791764-3410.jpg"
           />
         </template>
       </v-img>
@@ -87,14 +95,6 @@
         class="d-none"
         @change="updateAvatarHandler"
       >
-
-      <v-text-field
-        label="Роль"
-        class="mt-2"
-        density="comfortable"
-        :model-value="mainStore.form.role_name"
-        readonly
-      />
     </div>
   </section>
 </template>

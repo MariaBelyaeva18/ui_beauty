@@ -1,16 +1,15 @@
 <template>
   <section class="users-page">
+    <Profile class="mt-4" />
+
     <v-btn
       class="d-block ml-auto"
-      icon="mdi-wrench"
+      icon="mdi-pencil"
       size="x-large"
       :disabled="mainStore.isEdit"
       title="Редактировать"
       @click="mainStore.isEdit = true"
     />
-
-    <Profile class="mt-4" />
-
     <v-btn
       v-if="mainStore.isEdit"
       size="x-large"
