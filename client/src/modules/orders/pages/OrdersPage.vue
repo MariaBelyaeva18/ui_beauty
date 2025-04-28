@@ -10,19 +10,6 @@
           color="blue-darken-4"
           variant="flat"
           @click="ordersStore.addOrderModalView = true; ordersStore.mode = 'create'"
-          v-if="mainStore.form.role_name === 'Управляющий'"
-          class="mr-4"
-          color="blue-darken-4"
-          variant="flat"
-          @click="printPdf()"
-        >
-          Сгенерировать отчет
-        </v-btn>
-        <v-btn
-          v-if="mainStore.form.role_name === 'Клиент'"
-          color="blue-darken-4"
-          variant="flat"
-          @click="ordersStore.addOrderModalView = true; ordersStore.mode = 'create'"
         >
           Добавить новый заказ
         </v-btn>

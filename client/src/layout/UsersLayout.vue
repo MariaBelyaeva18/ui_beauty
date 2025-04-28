@@ -4,13 +4,12 @@
   >
     <v-app>
       <v-app-bar
-        class="bg-amber"
-        title="Название салона красоты"
+        title="Beauty help"
         @click="$router.push('/')"
       >
         <template #append>
-          <div class="d-flex flex-row mr-2">
-            <span class="mr-2">
+          <div class="d-flex flex-column mr-2">
+            <span>
               {{ mainStore.form.name }}
             </span>
             <span>
@@ -36,22 +35,15 @@
             </template>
             <template #error>
               <v-img
-                src="https://img.freepik.com/premium-vector/avatar-icon_791764-3410.jpg"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7W6mLzWzyvqjcwfWJLW1uGM6G-dAsfgtFzw&s"
               />
             </template>
           </v-img>
-          <v-btn
-            @click="authStore.logout()"
-          >
-            <v-icon
-              icon="mdi-logout"
-            />
-          </v-btn>
         </template>
       </v-app-bar>
 
       <v-navigation-drawer
-        class="bg-green"
+        class="bg-deep-purple"
         theme="dark"
         permanent
       >
@@ -99,6 +91,13 @@
             <a
               href="/docs"
             >Руководство пользователя</a>
+            <v-btn
+              block
+              class="mt-6"
+              @click="authStore.logout()"
+            >
+              Logout
+            </v-btn>
           </div>
         </template>
       </v-navigation-drawer>

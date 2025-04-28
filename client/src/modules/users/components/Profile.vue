@@ -30,14 +30,6 @@
       </v-row>
 
       <v-text-field
-        label="Роль"
-        class="mt-2"
-        density="comfortable"
-        :model-value="mainStore.form.role_name"
-        readonly
-      />
-
-      <v-text-field
         label="Телефон"
         density="comfortable"
         :readonly="!mainStore.isEdit"
@@ -84,7 +76,7 @@
         </template>
         <template #error>
           <v-img
-            src="https://img.freepik.com/premium-vector/avatar-icon_791764-3410.jpg"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7W6mLzWzyvqjcwfWJLW1uGM6G-dAsfgtFzw&s"
           />
         </template>
       </v-img>
@@ -95,6 +87,14 @@
         class="d-none"
         @change="updateAvatarHandler"
       >
+
+      <v-text-field
+        label="Роль"
+        class="mt-2"
+        density="comfortable"
+        :model-value="mainStore.form.role_name"
+        readonly
+      />
     </div>
   </section>
 </template>
@@ -127,10 +127,10 @@ const getAvatarSrc = computed(() => `${import.meta.env.VITE_API_URL}/${mainStore
     flex: 1 1 auto
   &__additional-info
     .avatar
-      width: 198px
-      height: 198px
-      border-radius: 50%
-      &:hover
-        filter: blur(8px)
-        cursor: pointer
+    width: 198px
+    height: 198px
+    border-radius: 50%
+    &:hover
+      filter: blur(8px)
+      cursor: pointer
 </style>
