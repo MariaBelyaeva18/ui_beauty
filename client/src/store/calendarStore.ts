@@ -84,6 +84,31 @@ export const useCalendarStore = defineStore('calendar', {
       }
     },
 
+    /** Обновление услуги */
+    async delete() {
+      try {
+        this.loadingFlags.upsert = true;
+        const date = new Date(Date.now());
+        const isoString = date.toISOString()
+        await api.put('/employee-absence', {
+          id: this.form.id,
+          employeeId: this.form.employeeId,
+          dateFrom: this.form.dateFrom,
+          dateTo: this.form.dateTo,
+          reason: this.form.reason,
+          deletedAt: isoString,
+        });
+        await this.getAbsence();
+
+        this.addAbsenceModalView = false;
+        this.clearForm();
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.loadingFlags.upsert = false;
+      }
+    },
+
 
     clearForm() {
       this.form = {

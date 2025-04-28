@@ -62,6 +62,14 @@
       >
         Сохранить
       </v-btn>
+      <v-btn
+        color="blue-darken-4"
+        variant="flat"
+        :loading="calendarStore.loadingFlags.upsert"
+        @click="calendarStore.delete()"
+      >
+        Удалить
+      </v-btn>
     </template>
   </v-navigation-drawer>
 </template>

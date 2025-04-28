@@ -54,7 +54,9 @@
               :key="day"
               :class="{ 'absent': isAbsent(absence, day) }"
               :title="getAbsenceReason(absence, day)"
-              @click="isAbsent(absence, day) && updateHandler(absence)"
+              @click="mainStore.form.role_name === 'Управляющий'
+                && isAbsent(absence, day)
+                && updateHandler(absence)"
             />
           </tr>
         </tbody>
