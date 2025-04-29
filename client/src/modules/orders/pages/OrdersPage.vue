@@ -45,7 +45,7 @@
       <template #item.actions="{ item }">
         <div class="d-flex ga-1">
           <v-icon
-            v-if="mainStore.form.role_name === 'Клиент'"
+            v-if="mainStore.form.role_name !== 'Мастер'"
             size="small"
             title="Редактировать заказ"
             @click="editHandler(item)"
