@@ -32,6 +32,9 @@
       @update:page="changePageHandler"
       @update:items-per-page="changePageItemsHandler"
     >
+      <template #item.executionDate="{ item }">
+        {{ getDate(item.executionDate, 'DD.MM.YYYY HH:mm') }}
+      </template>
       <template #item.status="{ item }">
         <v-chip
           :color="statuses[item.status].color"
@@ -165,21 +168,21 @@ const currentUserOrders = () => {
   return ordersStore.data;
 };
 
-const printPdf = async () => {
-  try {
-    const newTab = window.open('http://localhost:8080/orders/report', '_blank');
-
-    setTimeout(() => {
-      if (newTab) {
-        console.log('HERERER');
-        newTab.print(); // Открывает диалог печати
-      } else {
-        console.error('Не удалось открыть новое окно');
-      }
-    }, 5000);
-  } catch (error) {
-    console.error('Ошибка при печати PDF:', error);
-  }
-};
+// const printPdf = async () => {
+//   try {
+//     const newTab = window.open('http://localhost:8080/orders/report', '_blank');
+//
+//     setTimeout(() => {
+//       if (newTab) {
+//         console.log('HERERER');
+//         newTab.print(); // Открывает диалог печати
+//       } else {
+//         console.error('Не удалось открыть новое окно');
+//       }
+//     }, 5000);
+//   } catch (error) {
+//     console.error('Ошибка при печати PDF:', error);
+//   }
+// };
 
 </script>

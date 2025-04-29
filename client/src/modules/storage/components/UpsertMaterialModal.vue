@@ -20,10 +20,11 @@
         @input="storageStore.form.materialName = $event.target.value"
       />
       <v-text-field
+        type="number"
         label="Количество материала"
         density="comfortable"
         :model-value="storageStore.form.amount"
-        @input="storageStore.form.amount = $event.target.value"
+        @input="handleNumericInput($event)"
       />
       <v-date-input
         label="Годен до"
@@ -78,5 +79,12 @@ const saveMaterialHandler = async () => {
 const closeHandler = () => {
   storageStore.addMaterialModalView = false;
   storageStore.clearForm();
+};
+
+const handleNumericInput = (event) => {
+  const { value } = event.target;
+  // Удаляем всё, кроме цифр
+  const numericValue = value.replace(/[^0-9]/g, '');
+  storageStore.form.amount = numericValue;
 };
 </script>

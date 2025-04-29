@@ -29,6 +29,9 @@
       @update:page="changePageHandler"
       @update:items-per-page="changePageItemsHandler"
     >
+      <template #item.expirationDate="{ item }">
+        {{ getDate(item.expirationDate, 'DD.MM.YYYY') }}
+      </template>
       <template #item.actions="{ item }">
         <v-icon
           class="me-2"

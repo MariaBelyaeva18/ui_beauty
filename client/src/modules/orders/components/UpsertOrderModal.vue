@@ -19,7 +19,7 @@
         variant="outlined"
         persistent-placeholder
         :model-value="ordersStore.form.executionDate"
-        @update:modelValue="getDateTime($event); checkMasterInfo()"
+        @update:modelValue="ordersStore.form.executionDate = $event; checkMasterInfo()"
       />
       <v-select
         class="mt-4"
@@ -95,14 +95,14 @@ const closeHandler = () => {
   ordersStore.clearForm();
 };
 
-const getDateTime = (val) => {
-  // Получаем смещение временной зоны в минутах
-  const timezoneOffset = val.getTimezoneOffset();
-  // Корректируем дату с учетом смещения
-  const adjustedDate = new Date(val.getTime() - (timezoneOffset * 60000));
-
-  ordersStore.form.executionDate = adjustedDate;
-};
+// const getDateTime = (val) => {
+//   // Получаем смещение временной зоны в минутах
+//   const timezoneOffset = val.getTimezoneOffset();
+//   // Корректируем дату с учетом смещения
+//   const adjustedDate = new Date(val.getTime() - (timezoneOffset * 60000));
+//
+//   ordersStore.form.executionDate = adjustedDate;
+// };
 
 const checkMasterInfo = () => {
   ordersStore.form.masterId = null;
