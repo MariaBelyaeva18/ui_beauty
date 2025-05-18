@@ -15,22 +15,27 @@
       <v-text-field
         class="mt-4"
         label="Название материала"
+        :error="!storageStore.formValid.materialName"
+        :error-messages="langs[storageStore.formErrors.materialName]"
         density="comfortable"
         :model-value="storageStore.form.materialName"
         @input="storageStore.form.materialName = $event.target.value"
       />
       <v-text-field
-        type="number"
-        label="Количество материала"
+        class="mt-4"
+        label="Количество материала (не меньше 1)"
+        :error="!storageStore.formValid.amount"
+        :error-messages="langs[storageStore.formErrors.amount]"
         density="comfortable"
         :model-value="storageStore.form.amount"
-        @input="handleNumericInput($event)"
+        @input="storageStore.form.amount = $event.target.value"
       />
       <v-date-input
+        class="mt-4"
         label="Годен до"
+        :error="!storageStore.formValid.expirationDate"
+        :error-messages="langs[storageStore.formErrors.expirationDate]"
         prepend-icon=""
-        variant="outlined"
-        persistent-placeholder
         :model-value="storageStore.form.expirationDate"
         @update:modelValue="storageStore.form.expirationDate = $event"
       />
@@ -59,6 +64,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useStorageStore } from '@/store/storageStore';
+import langs from '@/utils/langs';
 
 const storageStore = useStorageStore();
 
@@ -73,18 +79,10 @@ const saveMaterialHandler = async () => {
   } else {
     await storageStore.updateMaterial();
   }
-  storageStore.addMaterialModalView = false;
 };
 
 const closeHandler = () => {
   storageStore.addMaterialModalView = false;
   storageStore.clearForm();
-};
-
-const handleNumericInput = (event) => {
-  const { value } = event.target;
-  // Удаляем всё, кроме цифр
-  const numericValue = value.replace(/[^0-9]/g, '');
-  storageStore.form.amount = numericValue;
 };
 </script>

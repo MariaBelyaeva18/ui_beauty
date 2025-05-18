@@ -8,7 +8,19 @@ export const useStorageStore = defineStore('storage', {
       id: null,
       materialName: '',
       expirationDate: null,
-      amount: 0,
+      amount: null,
+    },
+    formValid: {
+      id: true,
+      materialName: true,
+      expirationDate: true,
+      amount: true,
+    },
+    formErrors: {
+      id: null,
+      materialName: null,
+      expirationDate: null,
+      amount: null,
     },
     loadingFlags: {
       upsertMaterial: false,
@@ -58,10 +70,15 @@ export const useStorageStore = defineStore('storage', {
           amount: this.form.amount,
           expirationDate: this.form.expirationDate
         });
+        this.addMaterialModalView = false;
         this.clearForm();
         await this.getList();
       } catch (e) {
         console.error(e);
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
       } finally {
         this.loadingFlags.upsertMaterial = false;
       }
@@ -77,10 +94,15 @@ export const useStorageStore = defineStore('storage', {
           amount: this.form.amount,
           expirationDate: this.form.expirationDate
         });
+        this.addMaterialModalView = false;
         this.clearForm();
         await this.getList();
       } catch (e) {
         console.error(e);
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
       } finally {
         this.loadingFlags.upsertMaterial = false;
       }
@@ -101,10 +123,41 @@ export const useStorageStore = defineStore('storage', {
       this.form = {
         id: null,
         materialName: '',
-        amount: 0,
-        expirationDate: null
+        expirationDate: null,
+        amount: null,
       };
-    }
+      this.formValid = {
+        id: true,
+        materialName: true,
+        expirationDate: true,
+        amount: true,
+      };
+      this.formErrors = {
+        id: null,
+        materialName: null,
+        expirationDate: null,
+        amount: null,
+      };
+    },
 
+    /** Проверка наличия ошибок валидации */
+    checkError(errorList) {
+      this.formValid = {
+        id: true,
+        materialName: true,
+        expirationDate: true,
+        amount: true,
+      };
+      this.formErrors = {
+        id: null,
+        materialName: null,
+        expirationDate: null,
+        amount: null,
+      };
+      Object.keys(errorList).forEach((el) => {
+        this.formValid[el] = false;
+        this.formErrors[el] = errorList[el];
+      })
+    },
   },
 });

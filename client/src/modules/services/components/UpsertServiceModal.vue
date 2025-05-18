@@ -99,7 +99,6 @@ const saveMaterialHandler = async () => {
   } else {
     await servicesStore.update();
   }
-  servicesStore.addMaterialModalView = false;
 };
 
 const closeHandler = () => {
