@@ -29,10 +29,12 @@
         density="comfortable"
         :model-value="storageStore.form.amount"
         @input="storageStore.form.amount = $event.target.value"
+        @keypress="onlyNumbers"
       />
       <v-date-input
         class="mt-4"
         label="Годен до"
+        :min="storageStore.mode === 'create' ? new Date() : null"
         :error="!storageStore.formValid.expirationDate"
         :error-messages="langs[storageStore.formErrors.expirationDate]"
         prepend-icon=""
@@ -45,7 +47,7 @@
         class="mr-2"
         color="blue-darken-4"
         variant="outlined"
-        @click="closeHandler "
+        @click="closeHandler"
       >
         Отменить
       </v-btn>
@@ -84,5 +86,18 @@ const saveMaterialHandler = async () => {
 const closeHandler = () => {
   storageStore.addMaterialModalView = false;
   storageStore.clearForm();
+};
+
+const onlyNumbers = (val) => {
+  const keyCode = val.keyCode || val.which;
+  const keyValue = String.fromCharCode(keyCode);
+  const isValid = /^\d+$/.test(keyValue); // Разрешаем только цифры
+
+  if (!isValid) {
+    val.preventDefault();
+    return false;
+  }
+
+  return true;
 };
 </script>
