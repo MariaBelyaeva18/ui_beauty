@@ -7,7 +7,7 @@
       <v-btn
         color="blue-darken-4"
         variant="flat"
-        @click="servicesStore.addMaterialModalView = true; servicesStore.mode = 'create'"
+        @click="servicesStore.addServiceModalView = true; servicesStore.mode = 'create'"
       >
         Добавить новую услугу
       </v-btn>
@@ -107,7 +107,7 @@ const changePageItemsHandler = (limit) => {
 };
 
 const editHandler = (item) => {
-  servicesStore.addMaterialModalView = true;
+  servicesStore.addServiceModalView = true;
   servicesStore.mode = 'edit';
 
   servicesStore.form = {

@@ -5,7 +5,7 @@
     location="right"
     width="500"
     :title="getTitle"
-    :model-value="servicesStore.addMaterialModalView"
+    :model-value="servicesStore.addServiceModalView"
     @update:model-value="closeHandler"
   >
     <template #default>
@@ -28,10 +28,11 @@
       />
       <v-text-field
         class="mt-4"
-        label="Стоимость"
+        label="Стоимость, руб"
         density="comfortable"
         :model-value="servicesStore.form.cost"
         @input="servicesStore.form.cost = $event.target.value"
+        @keypress="onlyNumbers"
       />
 
       <v-text-field
@@ -102,7 +103,20 @@ const saveMaterialHandler = async () => {
 };
 
 const closeHandler = () => {
-  servicesStore.addMaterialModalView = false;
+  servicesStore.addServiceModalView = false;
   servicesStore.clearForm();
+};
+
+const onlyNumbers = (val) => {
+  const keyCode = val.keyCode || val.which;
+  const keyValue = String.fromCharCode(keyCode);
+  const isValid = /^\d+$/.test(keyValue); // Разрешаем только цифры
+
+  if (!isValid) {
+    val.preventDefault();
+    return false;
+  }
+
+  return true;
 };
 </script>

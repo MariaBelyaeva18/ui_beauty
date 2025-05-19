@@ -11,6 +11,20 @@ export const useServicesStore = defineStore('services', {
       cost: 0,
       duration: null,
     },
+    formValid: {
+      id: true,
+      name: true,
+      description: true,
+      cost: true,
+      duration: true,
+    },
+    formErrors: {
+      id: null,
+      name: null,
+      description: null,
+      cost: null,
+      duration: null,
+    },
     loadingFlags: {
       upsert: false,
     },
@@ -60,10 +74,15 @@ export const useServicesStore = defineStore('services', {
           cost: this.form.cost,
           duration: this.form.duration,
         });
+        this.addServiceModalView = false;
         this.clearForm();
         await this.getList();
       } catch (e) {
         console.error(e);
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
       } finally {
         this.loadingFlags.upsert = false;
       }
@@ -80,10 +99,15 @@ export const useServicesStore = defineStore('services', {
           cost: this.form.cost,
           duration: this.form.duration,
         });
+        this.addServiceModalView = false;
         this.clearForm();
         await this.getList();
       } catch (e) {
         console.error(e);
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
       } finally {
         this.loadingFlags.upsert = false;
       }
@@ -108,7 +132,41 @@ export const useServicesStore = defineStore('services', {
         cost: 0,
         duration: null,
       };
-    }
+      this.formValid = {
+        id: true,
+        name: true,
+        description: true,
+        cost: true,
+        duration: true,
+      };
+      this.formErrors = {
+        id: null,
+        name: null,
+        description: null,
+        cost: null,
+        duration: null,
+      };
+    },
 
+    checkError(errorList) {
+      this.formValid = {
+        id: true,
+        name: true,
+        description: true,
+        cost: true,
+        duration: true,
+      };
+      this.formErrors = {
+        id: null,
+        name: null,
+        description: null,
+        cost: null,
+        duration: null,
+      };
+      Object.keys(errorList).forEach((el) => {
+        this.formValid[el] = false;
+        this.formErrors[el] = errorList[el];
+      })
+    },
   },
 });

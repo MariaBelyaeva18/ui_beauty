@@ -111,7 +111,7 @@ const changePageItemsHandler = (limit) => {
 };
 
 const editHandler = (item) => {
-  storageStore.addMaterialModalView = true;
+  storageStore.addServiceModalView = true;
   storageStore.mode = 'edit';
 
   storageStore.form = {
