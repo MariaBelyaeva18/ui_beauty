@@ -17,6 +17,8 @@
         label="Название услуги"
         density="comfortable"
         :model-value="servicesStore.form.name"
+        :error="!servicesStore.formValid.name"
+        :error-messages="langs[servicesStore.formErrors.name]"
         @input="servicesStore.form.name = $event.target.value"
       />
       <v-text-field
@@ -24,6 +26,8 @@
         label="Описание"
         density="comfortable"
         :model-value="servicesStore.form.description"
+        :error="!servicesStore.formValid.description"
+        :error-messages="langs[servicesStore.formErrors.description]"
         @input="servicesStore.form.description = $event.target.value"
       />
       <v-text-field
@@ -31,12 +35,16 @@
         label="Стоимость, руб"
         density="comfortable"
         :model-value="servicesStore.form.cost"
+        :error="!servicesStore.formValid.cost"
+        :error-messages="langs[servicesStore.formErrors.cost]"
         @input="servicesStore.form.cost = $event.target.value"
         @keypress="onlyNumbers"
       />
 
       <v-text-field
         :model-value="servicesStore.form.duration"
+        :error="!servicesStore.formValid.duration"
+        :error-messages="langs[servicesStore.formErrors.duration]"
         :active="menu2"
         :focus="menu2"
         label="Длительность"
@@ -84,6 +92,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useServicesStore } from '@/store/servicesStore';
+import langs from '@/utils/langs';
 
 const servicesStore = useServicesStore();
 
