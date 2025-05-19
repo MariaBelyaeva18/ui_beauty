@@ -31,7 +31,6 @@
         @input="servicesStore.form.description = $event.target.value"
       />
       <v-text-field
-        class="mt-4"
         label="Стоимость, руб"
         density="comfortable"
         :model-value="servicesStore.form.cost"
@@ -41,32 +40,16 @@
         @keypress="onlyNumbers"
       />
 
-      <v-text-field
+      <v-select
+        class="mt-4"
         :model-value="servicesStore.form.duration"
         :error="!servicesStore.formValid.duration"
         :error-messages="langs[servicesStore.formErrors.duration]"
-        :active="menu2"
-        :focus="menu2"
+        :items="items"
         label="Длительность"
-        prepend-icon="mdi-clock-time-four-outline"
-        readonly
+        clearable
         @update:modelValue="servicesStore.form.duration = $event"
-      >
-        <v-menu
-          v-model="menu2"
-          :close-on-content-click="false"
-          activator="parent"
-          transition="scale-transition"
-        >
-          <v-time-picker
-            v-if="menu2"
-            :model-value="servicesStore.form.duration"
-            full-width
-            format="24hr"
-            @update:modelValue="servicesStore.form.duration = $event"
-          />
-        </v-menu>
-      </v-text-field>
+      />
     </template>
     <template #append>
       <v-btn
@@ -101,7 +84,24 @@ const getTitle = computed(() => (servicesStore.mode === 'create'
   : 'Обновление услуги'
 ));
 
-const menu2 = ref(false);
+const items = ref([
+  '00:30',
+  '01:00',
+  '01:30',
+  '02:00',
+  '02:30',
+  '03:00',
+  '03:30',
+  '04:00',
+  '04:30',
+  '05:00',
+  '05:30',
+  '06:00',
+  '06:30',
+  '07:00',
+  '07:30',
+  '08:00',
+]);
 
 const saveMaterialHandler = async () => {
   if (servicesStore.mode === 'create') {

@@ -8,7 +8,7 @@ export const useServicesStore = defineStore('services', {
       id: null,
       name: '',
       description: '',
-      cost: 0,
+      cost: null,
       duration: null,
     },
     formValid: {
@@ -129,7 +129,7 @@ export const useServicesStore = defineStore('services', {
         id: null,
         name: '',
         description: '',
-        cost: 0,
+        cost: null,
         duration: null,
       };
       this.formValid = {
