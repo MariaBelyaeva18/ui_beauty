@@ -20,28 +20,39 @@
         item-value="id"
         density="comfortable"
         :model-value="calendarStore.form.employeeId"
+        :error="!calendarStore.formValid.employeeId"
+        :error-messages="langs[calendarStore.formErrors.employeeId]"
         @update:modelValue="calendarStore.form.employeeId = $event"
       />
       <v-date-input
+        class="mt-4"
         label="Дата начала"
         prepend-icon=""
         variant="outlined"
-        persistent-placeholder
         :model-value="calendarStore.form.dateFrom"
+        :error="!calendarStore.formValid.dateFrom"
+        :error-messages="langs[calendarStore.formErrors.dateFrom]"
         @update:modelValue="calendarStore.form.dateFrom = $event"
       />
       <v-date-input
+        class="mt-4"
         label="Дата окончания"
         prepend-icon=""
         variant="outlined"
-        persistent-placeholder
+        :disabled="!calendarStore.form.dateFrom"
+        :min="calendarStore.form.dateFrom"
         :model-value="calendarStore.form.dateTo"
+        :error="!calendarStore.formValid.dateTo"
+        :error-messages="langs[calendarStore.formErrors.dateTo]"
         @update:modelValue="calendarStore.form.dateTo = $event"
       />
       <v-text-field
+        class="mt-4"
         label="Причина"
         density="comfortable"
         :model-value="calendarStore.form.reason"
+        :error="!calendarStore.formValid.reason"
+        :error-messages="langs[calendarStore.formErrors.reason]"
         @input="calendarStore.form.reason = $event.target.value"
       />
     </template>
@@ -63,7 +74,8 @@
         Сохранить
       </v-btn>
       <v-btn
-        color="blue-darken-4"
+        v-if="calendarStore.mode === 'edit'"
+        color="blue-darken-4 ml-2"
         variant="flat"
         :loading="calendarStore.loadingFlags.upsert"
         @click="calendarStore.delete()"
@@ -75,8 +87,10 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, shallowRef } from 'vue';
+import { useDate } from 'vuetify';
 import { useCalendarStore } from '@/store/calendarStore';
+import langs from '@/utils/langs';
 
 const calendarStore = useCalendarStore();
 
@@ -100,6 +114,11 @@ const saveAbsenceHandler = async () => {
   } else {
     await calendarStore.update();
   }
-  closeHandler();
 };
+
+const adapter = useDate();
+
+function format(date) {
+  return adapter.toISO(date);
+}
 </script>

@@ -26,7 +26,22 @@
       </div>
 
       <!-- Календарь -->
-      <table class="absence-calendar">
+      <div
+        v-if="!calendarStore.absences?.length"
+        class="d-flex flex-column align-center justify-center mt-10"
+      >
+        <v-icon
+          class="me-2"
+          size="50"
+        >
+          mdi-alert-circle-outline
+        </v-icon>
+        <h3>Отпуска на этот месяц не спланированы!</h3>
+      </div>
+      <table
+        v-else
+        class="absence-calendar"
+      >
         <!-- Заголовок таблицы с датами -->
         <thead>
           <tr>

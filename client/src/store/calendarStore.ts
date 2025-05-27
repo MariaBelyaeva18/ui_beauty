@@ -13,7 +13,21 @@ export const useCalendarStore = defineStore('calendar', {
       employeeId: null,
       dateFrom: null,
       dateTo: null,
-      reason: '',
+      reason: null,
+    },
+    formValid: {
+      id: true,
+      employeeId: true,
+      dateFrom: true,
+      dateTo: true,
+      reason: true,
+    },
+    formErrors: {
+      id: null,
+      employeeId: null,
+      dateFrom: null,
+      dateTo: null,
+      reason: null,
     },
     loadingFlags: {
       upsert: false
@@ -57,9 +71,15 @@ export const useCalendarStore = defineStore('calendar', {
           dateTo: this.form.dateTo,
           reason: this.form.reason,
         });
+        this.addAbsenceModalView = false;
         await this.getAbsence();
+        this.clearForm();
       } catch (e) {
         console.error(e);
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
       } finally {
         this.loadingFlags.upsert = false;
       }
@@ -76,9 +96,15 @@ export const useCalendarStore = defineStore('calendar', {
           dateTo: this.form.dateTo,
           reason: this.form.reason,
         });
+        this.addAbsenceModalView = false;
         await this.getAbsence();
+        this.clearForm();
       } catch (e) {
         console.error(e);
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
       } finally {
         this.loadingFlags.upsert = false;
       }
@@ -88,22 +114,17 @@ export const useCalendarStore = defineStore('calendar', {
     async delete() {
       try {
         this.loadingFlags.upsert = true;
-        const date = new Date(Date.now());
-        const isoString = date.toISOString()
-        await api.put('/employee-absence', {
-          id: this.form.id,
-          employeeId: this.form.employeeId,
-          dateFrom: this.form.dateFrom,
-          dateTo: this.form.dateTo,
-          reason: this.form.reason,
-          deletedAt: isoString,
-        });
+        await api.put(`/employee-absence/${this.form.id}`);
         await this.getAbsence();
 
         this.addAbsenceModalView = false;
         this.clearForm();
       } catch (e) {
         console.error(e);
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
       } finally {
         this.loadingFlags.upsert = false;
       }
@@ -118,6 +139,41 @@ export const useCalendarStore = defineStore('calendar', {
         dateTo: null,
         reason: null,
       }
-    }
+      this.formValid = {
+        id: true,
+        employeeId: true,
+        dateFrom: true,
+        dateTo: true,
+        reason: true,
+      };
+      this.formErrors = {
+        id: null,
+        employeeId: null,
+        dateFrom: null,
+        dateTo: null,
+        reason: null,
+      };
+    },
+
+    checkError(errorList) {
+      this.formValid = {
+        id: true,
+        employeeId: true,
+        dateFrom: true,
+        dateTo: true,
+        reason: true,
+      };
+      this.formErrors = {
+        id: null,
+        employeeId: null,
+        dateFrom: null,
+        dateTo: null,
+        reason: null,
+      };
+      Object.keys(errorList).forEach((el) => {
+        this.formValid[el] = false;
+        this.formErrors[el] = errorList[el];
+      })
+    },
   },
 });
