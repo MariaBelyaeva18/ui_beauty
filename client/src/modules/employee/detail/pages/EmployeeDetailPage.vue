@@ -18,7 +18,7 @@
       size="x-large"
       color="blue-darken-4"
       :loading="saving"
-      @click="employeeStore.detail.mode = 'watch'"
+      @click="router.push('/employee')"
     >
       Отменить
     </v-btn>
