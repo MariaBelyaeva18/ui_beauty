@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { api } from '../utils/Api.js';
+import router from '../router';
 
 export const useEmployeeStore = defineStore('employee', {
   state: () => ({
@@ -34,6 +35,30 @@ export const useEmployeeStore = defineStore('employee', {
         username: '',
         password: '',
         masterServiceIds: []
+      },
+      formValid: {
+        id: true,
+        name: true,
+        middleName: true,
+        lastName: true,
+        phone: true,
+        roleId: true,
+        avatarFile: true,
+        username: true,
+        password: true,
+        masterServiceIds: true,
+      },
+      formErrors: {
+        id: null,
+        name: null,
+        middleName: null,
+        lastName: null,
+        phone: null,
+        roleId: null,
+        avatarFile: null,
+        username: null,
+        password: null,
+        masterServiceIds: null,
       },
       loadingFlags: {
         upsert: false,
@@ -136,8 +161,14 @@ export const useEmployeeStore = defineStore('employee', {
             'Content-Type': 'multipart/form-data',
           },
         });
+
+        await router.push('/employee');
       } catch (e) {
         console.error(e);
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
       } finally {
         this.detail.loadingFlags.upsert = false;
       }
@@ -158,8 +189,14 @@ export const useEmployeeStore = defineStore('employee', {
           password: this.detail.form.password,
           masterServiceIds: this.detail.form.masterServiceIds
         });
+
+        await router.push('/employee');
       } catch (e) {
         console.error(e);
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
       } finally {
         this.detail.loadingFlags.upsert = false;
       }
@@ -189,6 +226,61 @@ export const useEmployeeStore = defineStore('employee', {
         password: '',
         masterServiceIds: []
       };
+      this.detail.formValid = {
+        id: true,
+        name: true,
+        middleName: true,
+        lastName: true,
+        phone: true,
+        roleId: true,
+        avatarFile: true,
+        username: true,
+        password: true,
+        masterServiceIds: true,
+      };
+      this.detail.formErrors = {
+        id: null,
+        name: null,
+        middleName: null,
+        lastName: null,
+        phone: null,
+        roleId: null,
+        avatarFile: null,
+        username: null,
+        password: null,
+        masterServiceIds: null,
+      };
+    },
+
+    checkError(errorList) {
+      this.detail.formValid = {
+        id: true,
+        name: true,
+        middleName: true,
+        lastName: true,
+        phone: true,
+        roleId: true,
+        avatarFile: true,
+        username: true,
+        password: true,
+        masterServiceIds: true,
+      };
+      this.detail.formErrors = {
+        id: null,
+        name: null,
+        middleName: null,
+        lastName: null,
+        phone: null,
+        roleId: null,
+        avatarFile: null,
+        username: null,
+        password: null,
+        masterServiceIds: null,
+      };
+      Object.keys(errorList).forEach((el) => {
+        this.detail.formValid[el] = false;
+        this.detail.formErrors[el] = errorList[el];
+      })
     },
 
     /** Обновление аватара пользователя */

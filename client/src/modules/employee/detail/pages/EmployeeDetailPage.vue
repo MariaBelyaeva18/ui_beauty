@@ -1,7 +1,7 @@
 <template>
   <section class="employee-page">
     <v-btn
-      v-if="employeeStore.detail.mode !== 'create'"
+      v-if="employeeStore.detail.mode === 'watch'"
       class="d-block ml-auto"
       icon="mdi-wrench"
       size="x-large"
@@ -75,8 +75,6 @@ const saveHandler = async () => {
   }
 
   saving.value = false;
-
-  await router.push('/employee');
 };
 </script>
 

@@ -7,6 +7,8 @@
         :loading="employeeStore.detail.loadingFlags.getDetail"
         :readonly="employeeStore.detail.mode === 'watch'"
         :model-value="employeeStore.detail.form.lastName"
+        :error="!employeeStore.detail.formValid.lastName"
+        :error-messages="langs[employeeStore.detail.formErrors.lastName]"
         @input="employeeStore.detail.form.lastName = $event.target.value"
       />
       <v-row>
@@ -17,6 +19,8 @@
             :loading="employeeStore.detail.loadingFlags.getDetail"
             :readonly="employeeStore.detail.mode === 'watch'"
             :model-value="employeeStore.detail.form.name"
+            :error="!employeeStore.detail.formValid.name"
+            :error-messages="langs[employeeStore.detail.formErrors.name]"
             @input="employeeStore.detail.form.name = $event.target.value"
           />
         </v-col>
@@ -27,6 +31,8 @@
             :loading="employeeStore.detail.loadingFlags.getDetail"
             :readonly="employeeStore.detail.mode === 'watch'"
             :model-value="employeeStore.detail.form.middleName"
+            :error="!employeeStore.detail.formValid.middleName"
+            :error-messages="langs[employeeStore.detail.formErrors.middleName]"
             @input="employeeStore.detail.form.middleName = $event.target.value"
           />
         </v-col>
@@ -38,6 +44,8 @@
         :loading="employeeStore.detail.loadingFlags.getDetail"
         :readonly="employeeStore.detail.mode === 'watch'"
         :model-value="employeeStore.detail.form.phone"
+        :error="!employeeStore.detail.formValid.phone"
+        :error-messages="langs[employeeStore.detail.formErrors.phone]"
         @input="employeeStore.detail.form.phone = $event.target.value"
       />
 
@@ -49,6 +57,8 @@
             :loading="employeeStore.detail.loadingFlags.getDetail"
             :readonly="employeeStore.detail.mode === 'watch'"
             :model-value="employeeStore.detail.form.username"
+            :error="!employeeStore.detail.formValid.username"
+            :error-messages="langs[employeeStore.detail.formErrors.username]"
             @input="employeeStore.detail.form.username = $event.target.value"
           />
         </v-col>
@@ -59,6 +69,8 @@
             :loading="employeeStore.detail.loadingFlags.getDetail"
             :readonly="employeeStore.detail.mode === 'watch'"
             :model-value="employeeStore.detail.form.password"
+            :error="!employeeStore.detail.formValid.password"
+            :error-messages="langs[employeeStore.detail.formErrors.password]"
             @input="employeeStore.detail.form.password = $event.target.value;"
           />
         </v-col>
@@ -75,6 +87,8 @@
             density="comfortable"
             :loading="employeeStore.detail.loadingFlags.getDetail"
             :model-value="employeeStore.detail.form.roleId"
+            :error="!employeeStore.detail.formValid.roleId"
+            :error-messages="langs[employeeStore.detail.formErrors.roleId]"
             @update:modelValue="employeeStore.detail.form.roleId = $event"
           />
         </v-col>
@@ -86,6 +100,8 @@
             :loading="employeeStore.detail.loadingFlags.getDetail"
             :readonly="employeeStore.detail.mode === 'watch'"
             :model-value="employeeStore.detail.form.masterServiceIds"
+            :error="!employeeStore.detail.formValid.masterServiceIds"
+            :error-messages="langs[employeeStore.detail.formErrors.masterServiceIds]"
             item-title="name"
             item-value="id"
             density="comfortable"
@@ -95,24 +111,14 @@
           />
         </v-col>
       </v-row>
-      <v-file-input
-        v-if="employeeStore.detail.mode === 'create'"
-        label="Файл аватарки"
-        :loading="employeeStore.detail.loadingFlags.getDetail"
-        :model-value="employeeStore.detail.form.avatarFile"
-        prepend-icon="mdi-camera"
-        variant="filled"
-        @update:modelValue="employeeStore.detail.form.avatarFile = $event;"
-      />
     </div>
 
     <div
-      v-if="employeeStore.detail.mode !=='create'"
       class="profile__additional-info"
     >
       <v-img
         class="avatar"
-        :src="getAvatarSrc"
+        :src="getAvatarUrl(employeeStore.detail.form.avatarFile) || getAvatarSrc"
         cover
         @click="$refs.fileInput.click();"
       >
@@ -142,18 +148,26 @@
 </template>
 
 <script setup>
-
 import { computed } from 'vue';
 import { useEmployeeStore } from '@/store/employeeStore';
+import langs from '@/utils/langs';
 
 const employeeStore = useEmployeeStore();
 
 const updateAvatarHandler = (event) => {
   const file = event.target.files[0];
-  employeeStore.updateAvatar(file);
+  if (employeeStore.detail.mode !== 'create') {
+    employeeStore.updateAvatar(file);
+  } else {
+    employeeStore.detail.form.avatarFile = file;
+  }
 };
 
 const getAvatarSrc = computed(() => `${import.meta.env.VITE_API_URL}/${employeeStore.detail.avatarPath}`);
+const getAvatarUrl = (file) => {
+  if (file) return URL.createObjectURL(file);
+  return null;
+};
 
 </script>
 
