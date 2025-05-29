@@ -1,18 +1,20 @@
 <template>
   <section class="profile">
-    <div class="profile__main-info">
-      <v-text-field
-        label="Фамилия"
-        density="comfortable"
-        :loading="employeeStore.detail.loadingFlags.getDetail"
-        :readonly="employeeStore.detail.mode === 'watch'"
-        :model-value="employeeStore.detail.form.lastName"
-        :error="!employeeStore.detail.formValid.lastName"
-        :error-messages="langs[employeeStore.detail.formErrors.lastName]"
-        @input="employeeStore.detail.form.lastName = $event.target.value"
-      />
+    <div class="profile__main-info mr-16">
       <v-row>
-        <v-col cols="6">
+        <v-col cols="4">
+          <v-text-field
+            label="Фамилия"
+            density="comfortable"
+            :loading="employeeStore.detail.loadingFlags.getDetail"
+            :readonly="employeeStore.detail.mode === 'watch'"
+            :model-value="employeeStore.detail.form.lastName"
+            :error="!employeeStore.detail.formValid.lastName"
+            :error-messages="langs[employeeStore.detail.formErrors.lastName]"
+            @input="employeeStore.detail.form.lastName = $event.target.value"
+          />
+        </v-col>
+        <v-col cols="4">
           <v-text-field
             label="Имя"
             density="comfortable"
@@ -24,7 +26,7 @@
             @input="employeeStore.detail.form.name = $event.target.value"
           />
         </v-col>
-        <v-col cols="6">
+        <v-col cols="4">
           <v-text-field
             label="Отчество"
             density="comfortable"
@@ -38,17 +40,61 @@
         </v-col>
       </v-row>
 
-      <v-text-field
-        label="Телефон"
-        density="comfortable"
-        :loading="employeeStore.detail.loadingFlags.getDetail"
-        :readonly="employeeStore.detail.mode === 'watch'"
-        :model-value="employeeStore.detail.form.phone"
-        :error="!employeeStore.detail.formValid.phone"
-        :error-messages="langs[employeeStore.detail.formErrors.phone]"
-        @input="employeeStore.detail.form.phone = $event.target.value"
-      />
+      <v-row>
+        <v-col cols="4">
+          <v-text-field
+            label="Телефон (без +7)"
+            density="comfortable"
+            :loading="employeeStore.detail.loadingFlags.getDetail"
+            :readonly="employeeStore.detail.mode === 'watch'"
+            :model-value="employeeStore.detail.form.phone"
+            :error="!employeeStore.detail.formValid.phone"
+            :error-messages="langs[employeeStore.detail.formErrors.phone]"
+            @input="employeeStore.detail.form.phone = $event.target.value"
+            @keypress="onlyNumbers"
+          />
+        </v-col>
 
+        <v-col cols="4">
+          <v-select
+            label="Роль"
+            :readonly="employeeStore.detail.mode === 'watch'"
+            :items="employeeStore.detail.roles.filter((el) => el.role !== 'Клиент')"
+            item-title="role"
+            item-value="id"
+            density="comfortable"
+            :loading="employeeStore.detail.loadingFlags.getDetail"
+            :model-value="employeeStore.detail.form.roleId"
+            :error="!employeeStore.detail.formValid.roleId"
+            :error-messages="langs[employeeStore.detail.formErrors.roleId]"
+            @update:modelValue="employeeStore.detail.form.roleId = $event"
+          />
+        </v-col>
+        <v-col cols="4">
+          <v-combobox
+            multiple
+            label="Услуги"
+            :loading="employeeStore.detail.loadingFlags.getDetail"
+            :readonly="employeeStore.detail.mode === 'watch'"
+            :model-value="employeeStore.detail.form.masterServiceIds"
+            :error="!employeeStore.detail.formValid.masterServiceIds"
+            :error-messages="langs[employeeStore.detail.formErrors.masterServiceIds]"
+            item-title="name"
+            item-value="id"
+            density="comfortable"
+            :return-object="false"
+            :items="employeeStore.detail.services"
+            @update:modelValue="employeeStore.detail.form.masterServiceIds = $event"
+          />
+        </v-col>
+      </v-row>
+
+      <div
+        class="d-flex justify-end text-blue cursor-pointer"
+        @click="generate()"
+      >
+        Сгенерировать пароль
+      </div>
       <v-row>
         <v-col cols="6">
           <v-text-field
@@ -65,6 +111,8 @@
         <v-col cols="6">
           <v-text-field
             label="Пароль"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassword ? 'text' : 'password'"
             density="comfortable"
             :loading="employeeStore.detail.loadingFlags.getDetail"
             :readonly="employeeStore.detail.mode === 'watch'"
@@ -72,42 +120,7 @@
             :error="!employeeStore.detail.formValid.password"
             :error-messages="langs[employeeStore.detail.formErrors.password]"
             @input="employeeStore.detail.form.password = $event.target.value;"
-          />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="6">
-          <v-select
-            class="mt-4"
-            label="Роль"
-            :readonly="employeeStore.detail.mode === 'watch'"
-            :items="employeeStore.detail.roles.filter((el) => el.role !== 'Клиент')"
-            item-title="role"
-            item-value="id"
-            density="comfortable"
-            :loading="employeeStore.detail.loadingFlags.getDetail"
-            :model-value="employeeStore.detail.form.roleId"
-            :error="!employeeStore.detail.formValid.roleId"
-            :error-messages="langs[employeeStore.detail.formErrors.roleId]"
-            @update:modelValue="employeeStore.detail.form.roleId = $event"
-          />
-        </v-col>
-        <v-col cols="6">
-          <v-combobox
-            class="mt-4"
-            multiple
-            label="Услуги"
-            :loading="employeeStore.detail.loadingFlags.getDetail"
-            :readonly="employeeStore.detail.mode === 'watch'"
-            :model-value="employeeStore.detail.form.masterServiceIds"
-            :error="!employeeStore.detail.formValid.masterServiceIds"
-            :error-messages="langs[employeeStore.detail.formErrors.masterServiceIds]"
-            item-title="name"
-            item-value="id"
-            density="comfortable"
-            :return-object="false"
-            :items="employeeStore.detail.services"
-            @update:modelValue="employeeStore.detail.form.masterServiceIds = $event"
+            @click:append="showPassword = !showPassword"
           />
         </v-col>
       </v-row>
@@ -148,9 +161,12 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useEmployeeStore } from '@/store/employeeStore';
 import langs from '@/utils/langs';
+import generatePassword from '@/utils/generatePassword';
+
+const showPassword = ref(false);
 
 const employeeStore = useEmployeeStore();
 
@@ -169,6 +185,26 @@ const getAvatarUrl = (file) => {
   return null;
 };
 
+const generate = () => {
+  employeeStore.detail.form.password = generatePassword();
+};
+
+const onlyNumbers = (val) => {
+  const keyCode = val.keyCode || val.which;
+  const keyValue = String.fromCharCode(keyCode);
+  const isValid = /^\d+$/.test(keyValue); // Разрешаем только цифры
+
+  if (!isValid) {
+    val.preventDefault();
+    return false;
+  }
+  if (employeeStore.detail.form.phone.length === 10) {
+    val.preventDefault();
+    return false;
+  }
+
+  return true;
+};
 </script>
 
 <style lang="sass" scoped>

@@ -1,5 +1,5 @@
 <template>
-  <section class="employee-page">
+  <section class="employee-page pa-16 ma-16">
     <v-btn
       v-if="employeeStore.detail.mode === 'watch'"
       class="d-block ml-auto"
@@ -15,7 +15,7 @@
     <v-btn
       v-if="employeeStore.detail.mode !== 'watch'"
       class="mr-2"
-      size="x-large"
+      size="large"
       color="blue-darken-4"
       :loading="saving"
       @click="router.push('/employee')"
@@ -25,7 +25,7 @@
 
     <v-btn
       v-if="employeeStore.detail.mode !== 'watch'"
-      size="x-large"
+      size="large"
       color="blue-darken-4"
       :loading="saving"
       @click="saveHandler"
