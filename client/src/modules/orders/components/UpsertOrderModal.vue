@@ -35,12 +35,12 @@
         :model-value="ordersStore.form.masterId"
         @update:modelValue="ordersStore.form.masterId = $event"
       />
+
       <v-date-input
         label="Дата записи"
         prepend-icon=""
         variant="outlined"
-        persistent-placeholder
-        :min="new Date()"
+        :min="ordersStore.mode === 'create' ? new Date() : null"
         :disabled="!ordersStore.form.masterId"
         :model-value="ordersStore.form.executionDate"
         @update:modelValue="ordersStore.form.executionDate = $event; ordersStore.getTimeSlots()"

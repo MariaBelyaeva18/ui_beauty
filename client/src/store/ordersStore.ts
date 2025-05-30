@@ -135,6 +135,7 @@ export const useOrdersStore = defineStore('orders', {
         await api.post('/orders', {
           executionDate: this.form.executionDate,
           serviceId: this.form.serviceId,
+          time: this.form.time,
           clientId: user.id,
           masterId: this.form.masterId,
           description: this.form.description,
@@ -157,6 +158,7 @@ export const useOrdersStore = defineStore('orders', {
           id: this.form.id,
           executionDate: this.form.executionDate,
           serviceId: this.form.serviceId,
+          time: this.form.time,
           clientId: user.id,
           masterId: this.form.masterId,
           description: this.form.description,
@@ -206,6 +208,7 @@ export const useOrdersStore = defineStore('orders', {
     clearForm() {
       this.form = {
         id: null,
+        time: null,
         executionDate: null,
         serviceId: null,
         masterId: null,
@@ -213,6 +216,7 @@ export const useOrdersStore = defineStore('orders', {
       };
       this.formValid = {
         id: true,
+        time: true,
         executionDate: true,
         serviceId: true,
         masterId: true,
@@ -220,6 +224,7 @@ export const useOrdersStore = defineStore('orders', {
       };
       this.formErrors = {
         id: null,
+        time: null,
         executionDate: null,
         serviceId: null,
         masterId: null,
@@ -230,17 +235,19 @@ export const useOrdersStore = defineStore('orders', {
     checkError(errorList) {
       this.formValid = {
         id: true,
-        name: true,
+        time: true,
+        executionDate: true,
+        serviceId: true,
+        masterId: true,
         description: true,
-        cost: true,
-        duration: true,
       };
       this.formErrors = {
         id: null,
-        name: null,
+        time: null,
+        executionDate: null,
+        serviceId: null,
+        masterId: null,
         description: null,
-        cost: null,
-        duration: null,
       };
       Object.keys(errorList).forEach((el) => {
         this.formValid[el] = false;
