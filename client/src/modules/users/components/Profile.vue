@@ -1,5 +1,5 @@
 <template>
-  <section class="profile">
+  <section class="profile pa-16 ma-16">
     <div class="profile__main-info">
       <v-text-field
         label="Фамилия"

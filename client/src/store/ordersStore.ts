@@ -8,9 +8,26 @@ export const useOrdersStore = defineStore('orders', {
     form: {
       id: null,
       executionDate: null,
+      time: null,
       serviceId: null,
       masterId: null,
       description: '',
+    },
+    formValid: {
+      id: true,
+      executionDate: true,
+      time: true,
+      serviceId: true,
+      masterId: true,
+      description: true,
+    },
+    formErrors: {
+      id: null,
+      executionDate: null,
+      time: null,
+      serviceId: null,
+      masterId: null,
+      description: null,
     },
     loadingFlags: {
       upsert: false,
@@ -31,6 +48,7 @@ export const useOrdersStore = defineStore('orders', {
     masters: [],
     addOrderModalView: false,
     cancelModalView: false,
+    items: [],
   }),
 
   actions: {
@@ -76,10 +94,10 @@ export const useOrdersStore = defineStore('orders', {
     async getMasterList() {
       try {
 
-        const { serviceId, executionDate} = this.form
+        const { serviceId } = this.form
 
         console.log(this.form)
-        if (!serviceId || !executionDate) {
+        if (!serviceId) {
           return
         }
 
@@ -87,7 +105,6 @@ export const useOrdersStore = defineStore('orders', {
         const { data: { data } } = await api.get('/orders/master', {
           params: {
             serviceId,
-            executionDate,
           },
         });
 
@@ -96,6 +113,18 @@ export const useOrdersStore = defineStore('orders', {
       } catch (error) {
       console.error(error)
       }
+    },
+
+    async getTimeSlots() {
+      const { serviceId, executionDate, masterId } = this.form
+      const { data } = await api.get('/orders/', {
+        params: {
+          serviceId,
+          masterId,
+          date: executionDate,
+        },
+      });
+      this.items = data;
     },
 
     /** Создание заказа */
@@ -182,7 +211,41 @@ export const useOrdersStore = defineStore('orders', {
         masterId: null,
         description: '',
       };
-    }
+      this.formValid = {
+        id: true,
+        executionDate: true,
+        serviceId: true,
+        masterId: true,
+        description: true,
+      };
+      this.formErrors = {
+        id: null,
+        executionDate: null,
+        serviceId: null,
+        masterId: null,
+        description: null,
+      };
+    },
 
+    checkError(errorList) {
+      this.formValid = {
+        id: true,
+        name: true,
+        description: true,
+        cost: true,
+        duration: true,
+      };
+      this.formErrors = {
+        id: null,
+        name: null,
+        description: null,
+        cost: null,
+        duration: null,
+      };
+      Object.keys(errorList).forEach((el) => {
+        this.formValid[el] = false;
+        this.formErrors[el] = errorList[el];
+      })
+    },
   },
 });

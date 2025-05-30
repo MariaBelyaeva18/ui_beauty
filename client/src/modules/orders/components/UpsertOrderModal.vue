@@ -13,20 +13,13 @@
         {{ getTitle }}
       </h1>
 
-      <v-date-input
-        label="Дата заказа"
-        prepend-icon=""
-        variant="outlined"
-        persistent-placeholder
-        :model-value="ordersStore.form.executionDate"
-        @update:modelValue="ordersStore.form.executionDate = $event; checkMasterInfo()"
-      />
       <v-select
         class="mt-4"
         label="Услуга"
         :items="ordersStore.services"
         item-title="name"
         item-value="id"
+        :disabled="ordersStore.mode === 'edit'"
         density="comfortable"
         :model-value="ordersStore.form.serviceId"
         @update:modelValue="ordersStore.form.serviceId = $event; checkMasterInfo()"
@@ -37,12 +30,35 @@
         :items="ordersStore.masters"
         item-title="name"
         item-value="id"
-        :disabled="!ordersStore.form.executionDate || !ordersStore.form.serviceId"
+        :disabled="ordersStore.mode === 'edit' || !ordersStore.form.serviceId"
         density="comfortable"
         :model-value="ordersStore.form.masterId"
         @update:modelValue="ordersStore.form.masterId = $event"
       />
+      <v-date-input
+        label="Дата записи"
+        prepend-icon=""
+        variant="outlined"
+        persistent-placeholder
+        :min="new Date()"
+        :disabled="!ordersStore.form.masterId"
+        :model-value="ordersStore.form.executionDate"
+        @update:modelValue="ordersStore.form.executionDate = $event; ordersStore.getTimeSlots()"
+      />
+
+      <v-select
+        class="mt-4"
+        :model-value="ordersStore.form.time"
+        :error="!ordersStore.formValid.time"
+        :error-messages="langs[ordersStore.formErrors.time]"
+        :items="ordersStore.items"
+        :disabled="!ordersStore.form.executionDate"
+        label="Время записи"
+        clearable
+        @update:modelValue="ordersStore.form.time = $event"
+      />
       <v-text-field
+        class="mt-5"
         label="Комментарий"
         density="comfortable"
         :model-value="ordersStore.form.description"
@@ -71,8 +87,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useOrdersStore } from '@/store/ordersStore';
+import langs from '@/utils/langs';
 
 const ordersStore = useOrdersStore();
 
@@ -95,17 +112,15 @@ const closeHandler = () => {
   ordersStore.clearForm();
 };
 
-// const getDateTime = (val) => {
-//   // Получаем смещение временной зоны в минутах
-//   const timezoneOffset = val.getTimezoneOffset();
-//   // Корректируем дату с учетом смещения
-//   const adjustedDate = new Date(val.getTime() - (timezoneOffset * 60000));
-//
-//   ordersStore.form.executionDate = adjustedDate;
-// };
-
 const checkMasterInfo = () => {
   ordersStore.form.masterId = null;
   ordersStore.getMasterList();
 };
+
+onMounted(() => {
+  if (!ordersStore.form.masterId) {
+    return;
+  }
+  ordersStore.getTimeSlots();
+});
 </script>
