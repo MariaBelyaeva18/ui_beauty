@@ -29,9 +29,12 @@
         label="Пароль"
         density="comfortable"
         hide-details
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        :type="showPassword ? 'text' : 'password'"
         :model-value="authStore.form.password"
         @input="authStore.form.password = $event.target.value"
         @keydown.enter="loginButton(authStore.form)"
+        @click:append="showPassword = !showPassword"
       />
     </div>
     <div>
@@ -55,9 +58,11 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { useAuthStore } from '@/store/authStore';
 
 const authStore = useAuthStore();
+const showPassword = ref(false);
 
 const loginButton = async (payload) => {
   authStore.message = null;

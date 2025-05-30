@@ -13,11 +13,18 @@ export const useRegisterStore = defineStore('register', {
       phone: null,
       role: null,
     },
+    passError: false,
   }),
 
   actions: {
     async createUser(form) {
+      if (form.password !== form.repeatPassword) {
+        this.passError = true;
+        return;
+      }
+
       try {
+        this.passError = false;
         await api.post('/auth/register', { ...form });
         this.router.push('/auth');
       } catch (e) {
