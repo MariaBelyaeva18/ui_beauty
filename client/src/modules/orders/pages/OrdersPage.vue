@@ -149,7 +149,7 @@ const editHandler = (item) => {
 
   ordersStore.form = {
     id: item.id,
-    executionDate: item.executionDate,
+    executionDate: new Date(item.executionDate),
     serviceId: item.service.id,
     masterId: item.master.id,
     description: item.description,
