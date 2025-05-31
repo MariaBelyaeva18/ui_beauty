@@ -1,5 +1,5 @@
 <template>
-  <section class="employee-page pa-16 ma-16">
+  <section class="employee-page pa-16">
     <v-btn
       v-if="employeeStore.detail.mode === 'watch'"
       class="d-block ml-auto"
