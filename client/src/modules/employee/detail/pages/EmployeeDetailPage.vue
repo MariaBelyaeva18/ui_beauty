@@ -41,8 +41,10 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import EmployeeCard from '@/modules/employee/detail/components/EmployeeCard.vue';
 import { useEmployeeStore } from '@/store/employeeStore';
 import router from '@/router';
+import { useMainStore } from '@/store/mainStore';
 
 const employeeStore = useEmployeeStore();
+const mainStore = useMainStore();
 
 const saving = ref(false);
 
@@ -69,6 +71,9 @@ const saveHandler = async () => {
   saving.value = true;
 
   if (employeeStore.detail.mode === 'edit') {
+    if (mainStore.form.id === employeeStore.detail.form.id) {
+      await mainStore.updateUserInfo(employeeStore.detail.form);
+    }
     await employeeStore.update();
   } else {
     await employeeStore.create();

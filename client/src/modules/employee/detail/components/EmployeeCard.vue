@@ -165,15 +165,20 @@ import { computed, ref } from 'vue';
 import { useEmployeeStore } from '@/store/employeeStore';
 import langs from '@/utils/langs';
 import generatePassword from '@/utils/generatePassword';
+import { useMainStore } from '@/store/mainStore';
 
 const showPassword = ref(false);
 
 const employeeStore = useEmployeeStore();
+const mainStore = useMainStore();
 
 const updateAvatarHandler = (event) => {
   const file = event.target.files[0];
   if (employeeStore.detail.mode !== 'create') {
     employeeStore.updateAvatar(file);
+    if (mainStore.form.id === employeeStore.detail.form.id) {
+      mainStore.updateAvatar(file);
+    }
   } else {
     employeeStore.detail.form.avatarFile = file;
   }

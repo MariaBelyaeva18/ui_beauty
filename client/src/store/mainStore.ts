@@ -26,12 +26,17 @@ export const useMainStore = defineStore('main', {
       this.roles = data;
     },
 
-    async getUserInfo() {
+    async getUserInfo(avatar?) {
       const user = JSON.parse(localStorage.getItem('user'));
       const { data } = await api.get(`/users/${user.id}`);
 
-      this.avatarPath = data.avatar_path;
+      console.log(data);
 
+      if (avatar) {
+        this.avatarPath = data.avatar_path;
+        return
+      }
+      this.avatarPath = data.avatar_path;
       this.form = {
         id: data.id,
         name: data.name,
@@ -45,15 +50,16 @@ export const useMainStore = defineStore('main', {
       };
     },
 
-    async updateUserInfo() {
+    async updateUserInfo(emplForm) {
+      const form = emplForm || this.form
       const user = JSON.parse(localStorage.getItem('user'));
       await api.patch(`/users/${user.id}`, {
-        name: this.form.name,
-        middle_name: this.form.middle_name,
-        last_name: this.form.last_name,
-        phone_number: this.form.phone,
-        login: this.form.username,
-        password: this.form.password,
+        name: form.name,
+        middle_name: form.middle_name,
+        last_name: form.last_name,
+        phone_number: form.phone,
+        login: form.username,
+        password: form.password,
       });
       await this.getUserInfo();
     },
@@ -70,7 +76,7 @@ export const useMainStore = defineStore('main', {
         },
       });
 
-      await this.getUserInfo();
+      await this.getUserInfo(true);
     },
   },
 });

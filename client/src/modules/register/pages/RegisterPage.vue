@@ -7,12 +7,15 @@
       <v-text-field
         label="Фамилия"
         density="comfortable"
+        :error="!registerStore.formValid.last_name"
+        :error-messages="langs[registerStore.formErrors.last_name]"
         :model-value="registerStore.form.last_name"
         @input="registerStore.form.last_name = $event.target.value"
       />
       <v-text-field
         label="Имя"
-        :rules="rules"
+        :error="!registerStore.formValid.name"
+        :error-messages="langs[registerStore.formErrors.name]"
         density="comfortable"
         :model-value="registerStore.form.name"
         @input="registerStore.form.name = $event.target.value"
@@ -26,6 +29,8 @@
       <v-text-field
         label="Телефон (без +7)"
         density="comfortable"
+        :error="!registerStore.formValid.phone"
+        :error-messages="langs[registerStore.formErrors.phone]"
         :model-value="registerStore.form.phone"
         @input="registerStore.form.phone = $event.target.value"
         @keypress="onlyNumbers"
@@ -35,21 +40,31 @@
         :items="mainStore.roles.filter((el) => el.role === 'Клиент')"
         item-title="role"
         item-value="id"
-        :rules="rules"
+        :error="!registerStore.formValid.role"
+        :error-messages="langs[registerStore.formErrors.role]"
         density="comfortable"
         :model-value="registerStore.form.role"
         @update:modelValue="registerStore.form.role = $event"
       />
       <v-text-field
         label="Логин"
-        :rules="rules"
+        :error="!registerStore.formValid.username"
+        :error-messages="langs[registerStore.formErrors.username]"
         density="comfortable"
         :model-value="registerStore.form.username"
         @input="registerStore.form.username = $event.target.value"
       />
+
+      <div
+        class="d-flex justify-end text-blue cursor-pointer"
+        @click="generate()"
+      >
+        Сгенерировать пароль
+      </div>
       <v-text-field
         label="Пароль"
-        :rules="rules"
+        :error="!registerStore.formValid.password"
+        :error-messages="langs[registerStore.formErrors.password]"
         :append-icon="pass1 ? 'mdi-eye' : 'mdi-eye-off'"
         :type="pass1 ? 'text' : 'password'"
         density="comfortable"
@@ -59,7 +74,8 @@
       />
       <v-text-field
         label="Повторите пароль"
-        :rules="rules"
+        :error="!registerStore.formValid.repeatPassword"
+        :error-messages="langs[registerStore.formErrors.repeatPassword]"
         :append-icon="pass2 ? 'mdi-eye' : 'mdi-eye-off'"
         :type="pass2 ? 'text' : 'password'"
         density="comfortable"
@@ -85,7 +101,7 @@
           type="submit"
           style="margin-left: 10px"
           class="mt-2"
-          @click.stop="reset()"
+          @click.stop="registerStore.reset()"
         >
           Очистить
         </v-btn>
@@ -93,7 +109,7 @@
           type="submit"
           style="margin-left: 10px"
           class="mt-2"
-          @click.stop="reset(); $router.push('/auth')"
+          @click.stop="registerStore.reset(); $router.push('/auth')"
         >
           Отмена
         </v-btn>
@@ -106,6 +122,8 @@
 import { ref } from 'vue';
 import { useMainStore } from '@/store/mainStore';
 import { useRegisterStore } from '@/store/registerStore';
+import generatePassword from '@/utils/generatePassword';
+import langs from '@/utils/langs';
 
 const mainStore = useMainStore();
 const registerStore = useRegisterStore();
@@ -113,20 +131,10 @@ const registerStore = useRegisterStore();
 const pass1 = ref(false);
 const pass2 = ref(false);
 
-const rules = ref([(value) => !!value || 'Это обязательное поле.']);
-
-const reset = () => {
-  registerStore.form = {
-    name: null,
-    middle_name: null,
-    last_name: null,
-    username: null,
-    password: null,
-    repeatPassword: null,
-    phone: null,
-    role: null,
-  };
-  registerStore.passError = false;
+const generate = () => {
+  const pass = generatePassword();
+  registerStore.form.password = pass;
+  registerStore.form.repeatPassword = pass;
 };
 
 const onlyNumbers = (val) => {

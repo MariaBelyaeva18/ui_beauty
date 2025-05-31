@@ -89,11 +89,15 @@ export const useEmployeeStore = defineStore('employee', {
     },
 
     /** Получение списка услуг */
-    async getDetailInfo(masterId: string) {
+    async getDetailInfo(masterId: string, avatar?) {
       try {
         this.detail.loadingFlags.getDetail = true;
         const { data: { data } } = await api.get(`/employee/detail/${masterId}`);
 
+        if (avatar) {
+          this.detail.avatarPath = data.avatarPath;
+          return
+        }
         this.detail.avatarPath = data.avatarPath
 
         this.detail.form = {
@@ -295,7 +299,7 @@ export const useEmployeeStore = defineStore('employee', {
         },
       });
 
-      await this.getDetailInfo(this.detail.form.id);
+      await this.getDetailInfo(this.detail.form.id, true);
     }
 
   },
