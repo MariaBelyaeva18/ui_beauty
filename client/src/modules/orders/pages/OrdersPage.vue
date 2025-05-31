@@ -45,7 +45,7 @@
       <template #item.actions="{ item }">
         <div class="d-flex ga-1">
           <v-icon
-            v-if="mainStore.form.role_name !== 'Мастер'"
+            v-if="!['canceled', 'done'].includes(item.status)"
             size="small"
             title="Редактировать заказ"
             @click="editHandler(item)"
@@ -53,6 +53,7 @@
             mdi-pencil
           </v-icon>
           <v-icon
+            v-if="!['canceled', 'done'].includes(item.status)"
             size="small"
             title="Отменить заказ"
             @click="ordersStore.cancelModalView = true; ordersStore.form.id = item.id"
@@ -60,7 +61,7 @@
             mdi-cancel
           </v-icon>
           <v-icon
-            v-if="mainStore.form.role_name !== 'Клиент'"
+            v-if="canTakeToWork(item)"
             size="small"
             title="Взять в работу"
             @click="ordersStore.acceptOrder(item.id)"
@@ -68,7 +69,7 @@
             mdi-briefcase-outline
           </v-icon>
           <v-icon
-            v-if="mainStore.form.role_name !== 'Клиент'"
+            v-if="mainStore.form.role_name !== 'Клиент' && item.status === 'accepted'"
             size="small"
             title="Завершить заказ"
             @click="ordersStore.doneOrder(item.id)"
@@ -151,11 +152,23 @@ const editHandler = (item) => {
     id: item.id,
     executionDate: new Date(item.executionDate),
     serviceId: item.service.id,
+    time: item.time,
     masterId: item.master.id,
     description: item.description,
   };
 
+  ordersStore.getTimeSlots();
   ordersStore.masters = [item.master];
+};
+
+const canTakeToWork = (item) => {
+  if (mainStore.form.role_name === 'Мастер' && item.status === 'canceled') {
+    return false;
+  }
+  if (mainStore.form.role_name !== 'Клиент' && item.status !== 'done' && item.status !== 'accepted') {
+    return true;
+  }
+  return false;
 };
 
 const currentUserOrders = () => {

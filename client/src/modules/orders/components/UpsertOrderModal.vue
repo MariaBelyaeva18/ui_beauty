@@ -22,6 +22,8 @@
         :disabled="ordersStore.mode === 'edit'"
         density="comfortable"
         :model-value="ordersStore.form.serviceId"
+        :error="!ordersStore.formValid.serviceId"
+        :error-messages="langs[ordersStore.formErrors.serviceId]"
         @update:modelValue="ordersStore.form.serviceId = $event; checkMasterInfo()"
       />
       <v-select
@@ -33,6 +35,8 @@
         :disabled="ordersStore.mode === 'edit' || !ordersStore.form.serviceId"
         density="comfortable"
         :model-value="ordersStore.form.masterId"
+        :error="!ordersStore.formValid.masterId"
+        :error-messages="langs[ordersStore.formErrors.masterId]"
         @update:modelValue="ordersStore.form.masterId = $event"
       />
 
@@ -40,12 +44,13 @@
         label="Дата записи"
         prepend-icon=""
         variant="outlined"
-        :min="ordersStore.mode === 'create' ? new Date() : null"
+        :min="new Date()"
         :disabled="!ordersStore.form.masterId"
         :model-value="ordersStore.form.executionDate"
-        @update:modelValue="ordersStore.form.executionDate = $event; ordersStore.getTimeSlots()"
+        :error="!ordersStore.formValid.executionDate"
+        :error-messages="langs[ordersStore.formErrors.executionDate]"
+        @update:modelValue="ordersStore.form.executionDate = $event; ordersStore.form.time = null; ordersStore.getTimeSlots()"
       />
-
       <v-select
         class="mt-4"
         :model-value="ordersStore.form.time"
@@ -61,7 +66,10 @@
         class="mt-5"
         label="Комментарий"
         density="comfortable"
+        :disabled="['Мастер', 'Управляющий'].includes(mainStore.form.role_name)"
         :model-value="ordersStore.form.description"
+        :error="!ordersStore.formValid.description"
+        :error-messages="langs[ordersStore.formErrors.description]"
         @input="ordersStore.form.description = $event.target.value"
       />
     </template>
@@ -70,7 +78,7 @@
         class="mr-2"
         color="blue-darken-4"
         variant="outlined"
-        @click="closeHandler "
+        @click="closeHandler"
       >
         Отменить
       </v-btn>
@@ -90,8 +98,10 @@
 import { computed, onMounted } from 'vue';
 import { useOrdersStore } from '@/store/ordersStore';
 import langs from '@/utils/langs';
+import { useMainStore } from '@/store/mainStore';
 
 const ordersStore = useOrdersStore();
+const mainStore = useMainStore();
 
 const getTitle = computed(() => (ordersStore.mode === 'create'
   ? 'Добавление нового заказа'
@@ -104,7 +114,6 @@ const saveMaterialHandler = async () => {
   } else {
     await ordersStore.update();
   }
-  ordersStore.addOrderModalView = false;
 };
 
 const closeHandler = () => {

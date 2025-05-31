@@ -142,8 +142,13 @@ export const useOrdersStore = defineStore('orders', {
         });
         this.clearForm();
         await this.getList();
+        this.addOrderModalView = false;
       } catch (e) {
         console.error(e);
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
       } finally {
         this.loadingFlags.upsert = false;
       }
@@ -165,8 +170,13 @@ export const useOrdersStore = defineStore('orders', {
         });
         this.clearForm();
         await this.getList();
+        this.addOrderModalView = false;
       } catch (e) {
         console.error(e);
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
       } finally {
         this.loadingFlags.upsert = false;
       }
