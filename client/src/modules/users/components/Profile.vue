@@ -6,6 +6,8 @@
         density="comfortable"
         :readonly="!mainStore.isEdit"
         :model-value="mainStore.form.last_name"
+        :error="!mainStore.formValid.lastName"
+        :error-messages="langs[mainStore.formErrors.lastName]"
         @input="mainStore.form.last_name = $event.target.value"
       />
       <v-row>
@@ -14,6 +16,8 @@
             label="Имя"
             density="comfortable"
             :readonly="!mainStore.isEdit"
+            :error="!mainStore.formValid.name"
+            :error-messages="langs[mainStore.formErrors.name]"
             :model-value="mainStore.form.name"
             @input="mainStore.form.name = $event.target.value"
           />
@@ -30,11 +34,12 @@
       </v-row>
 
       <v-text-field
-        label="Телефон"
+        label="Телефон (без +7)"
         density="comfortable"
         :readonly="!mainStore.isEdit"
         :model-value="mainStore.form.phone"
         @input="mainStore.form.phone = $event.target.value"
+        @keypress="onlyNumbers"
       />
 
       <v-row>
@@ -43,6 +48,8 @@
             label="Логин"
             density="comfortable"
             :readonly="!mainStore.isEdit"
+            :error="!mainStore.formValid.login"
+            :error-messages="langs[mainStore.formErrors.login]"
             :model-value="mainStore.form.username"
             @input="mainStore.form.username = $event.target.value"
           />
@@ -52,8 +59,13 @@
             label="Пароль"
             density="comfortable"
             :readonly="!mainStore.isEdit"
+            :error="!mainStore.formValid.password"
+            :error-messages="langs[mainStore.formErrors.password]"
             :model-value="mainStore.form.password"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassword ? 'text' : 'password'"
             @input="mainStore.form.password = $event.target.value;"
+            @click:append="showPassword = !showPassword"
           />
         </v-col>
       </v-row>
@@ -101,8 +113,9 @@
 
 <script setup>
 
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useMainStore } from '@/store/mainStore';
+import langs from '@/utils/langs';
 
 const mainStore = useMainStore();
 
@@ -115,8 +128,25 @@ const updateAvatarHandler = (event) => {
   mainStore.updateAvatar(file);
 };
 
-const getAvatarSrc = computed(() => `${import.meta.env.VITE_API_URL}/${mainStore.avatarPath}`);
+const showPassword = ref(false);
 
+const getAvatarSrc = computed(() => `${import.meta.env.VITE_API_URL}/${mainStore.avatarPath}`);
+const onlyNumbers = (val) => {
+  const keyCode = val.keyCode || val.which;
+  const keyValue = String.fromCharCode(keyCode);
+  const isValid = /^\d+$/.test(keyValue); // Разрешаем только цифры
+
+  if (!isValid) {
+    val.preventDefault();
+    return false;
+  }
+  if (mainStore.form.phone?.length === 10) {
+    val.preventDefault();
+    return false;
+  }
+
+  return true;
+};
 </script>
 
 <style lang="sass" scoped>

@@ -125,6 +125,10 @@ const onlyNumbers = (val) => {
     val.preventDefault();
     return false;
   }
+  if (servicesStore.form.cost?.length === 7) {
+    val.preventDefault();
+    return false;
+  }
 
   return true;
 };

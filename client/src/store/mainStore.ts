@@ -18,6 +18,22 @@ export const useMainStore = defineStore('main', {
       username: null,
       password: null,
     },
+    formValid: {
+      id: true,
+      name: true,
+      lastName: true,
+      roleId: true,
+      login: true,
+      password: true,
+    },
+    formErrors: {
+      id: null,
+      name: null,
+      lastName: null,
+      roleId: null,
+      login: null,
+      password: null,
+    },
   }),
 
   actions: {
@@ -48,20 +64,52 @@ export const useMainStore = defineStore('main', {
         username: data.login,
         password: data.password,
       };
+      this.formValid = {
+        id: true,
+        name: true,
+        middleName: true,
+        lastName: true,
+        phone: true,
+        roleId: true,
+        avatarFile: true,
+        login: true,
+        password: true,
+      };
+      this.formErrors = {
+        id: null,
+        name: null,
+        middleName: null,
+        lastName: null,
+        phone: null,
+        roleId: null,
+        avatarFile: null,
+        login: null,
+        password: null,
+      };
     },
 
     async updateUserInfo(emplForm) {
       const form = emplForm || this.form
       const user = JSON.parse(localStorage.getItem('user'));
-      await api.patch(`/users/${user.id}`, {
-        name: form.name,
-        middle_name: form.middle_name,
-        last_name: form.last_name,
-        phone_number: form.phone,
-        login: form.username,
-        password: form.password,
-      });
-      await this.getUserInfo();
+      try{
+        await api.patch(`/users/${user.id}`, {
+          name: form.name,
+          middle_name: form.middle_name,
+          last_name: form.last_name,
+          phone_number: form.phone,
+          login: form.username,
+          password: form.password,
+        });
+        await this.getUserInfo();
+
+        this.isEdit = false;
+      } catch (e) {
+        console.log(e)
+        const { data: { errorList = {} } = {} } = e.response.data;
+        if (errorList) {
+          this.checkError(errorList);
+        }
+      }
     },
 
     async updateAvatar(file) {
@@ -77,6 +125,35 @@ export const useMainStore = defineStore('main', {
       });
 
       await this.getUserInfo(true);
+    },
+
+    checkError(errorList) {
+      this.formValid = {
+        id: true,
+        name: true,
+        middleName: true,
+        lastName: true,
+        phone: true,
+        roleId: true,
+        avatarFile: true,
+        username: true,
+        password: true,
+      };
+      this.formErrors = {
+        id: null,
+        name: null,
+        middleName: null,
+        lastName: null,
+        phone: null,
+        roleId: null,
+        avatarFile: null,
+        username: null,
+        password: null,
+      };
+      Object.keys(errorList).forEach((el) => {
+        this.formValid[el] = false;
+        this.formErrors[el] = errorList[el];
+      })
     },
   },
 });

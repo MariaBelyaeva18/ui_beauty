@@ -34,10 +34,7 @@ const mainStore = useMainStore();
 const saving = ref(false);
 
 const saveHandler = async () => {
-  saving.value = true;
   await mainStore.updateUserInfo();
-  saving.value = false;
-  mainStore.isEdit = false;
 };
 </script>
 

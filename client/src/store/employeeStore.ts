@@ -218,6 +218,7 @@ export const useEmployeeStore = defineStore('employee', {
     },
 
     clearForm() {
+      this.detail.avatarPath = '';
       this.detail.form = {
         id: null,
         name: '',
